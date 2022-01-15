@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
             return const Text('error');
           }
           if (snapshot.hasData) {
-            return const SwipeScreen();
+            return SwipeScreen();
           }
           return const LoginScreen();
         });

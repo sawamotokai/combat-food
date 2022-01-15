@@ -40,6 +40,11 @@ dependencies:
   sign_in_with_apple: 3.2.0
   font_awesome_flutter: 9.2.0
   google_fonts: 2.1.0
+  flutter_tindercard: ^0.2.0
+  line_icons: ^2.0.1
+  flutter_svg: ^1.0.1
+  flutter_custom_clippers: ^2.0.0
+  modal_progress_hud_nsn: ^0.1.0-nullsafety-0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +66,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
