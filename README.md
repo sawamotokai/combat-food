@@ -1,16 +1,18 @@
-# combat_food
+# Combat Food
 
-A new Flutter project.
+## Firebase Setup
 
-## Getting Started
+- ### Install the CLI if not already done so
 
-This project is a starting point for a Flutter application.
+  `dart pub global activate flutterfire_cli`
 
-A few resources to get you started if this is your first Flutter project:
+- ### Run the `configure` command, select a Firebase project and platforms
+  - Run `flutterfire configure`
+  - Select `combatfoodapi` and hit enter
+  - Check `ios` and `android` and hit enter
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Running the project
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+flutter run
+```
