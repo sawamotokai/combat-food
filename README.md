@@ -11,6 +11,12 @@
   - Select `combatfoodapi` and hit enter
   - Check `ios` and `android` and hit enter
 
+## Installing dependancies (Only once)
+
+```
+flutter pub get
+```
+
 ## Running the project
 
 ```
