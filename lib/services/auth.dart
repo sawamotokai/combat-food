@@ -33,4 +33,9 @@ class AuthService {
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }
+
+  Future<String> getUserToken() async {
+    if (user == null) return "User not logged in";
+    return await user!.getIdToken(true);
+  }
 }
