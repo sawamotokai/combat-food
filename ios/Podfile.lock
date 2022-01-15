@@ -451,6 +451,8 @@ PODS:
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.7.0)
   - leveldb-library (1.22.1)
+  - modal_progress_hud_nsn (0.0.1):
+    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -468,6 +470,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - modal_progress_hud_nsn (from `.symlinks/plugins/modal_progress_hud_nsn/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
 
@@ -503,6 +506,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
+  modal_progress_hud_nsn:
+    :path: ".symlinks/plugins/modal_progress_hud_nsn/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   sign_in_with_apple:
@@ -530,6 +535,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  modal_progress_hud_nsn: f6fb744cd060653d66ed8f325360ef3650eb2fde
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
@@ -537,4 +543,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
