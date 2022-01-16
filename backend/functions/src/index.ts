@@ -63,7 +63,7 @@ combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => 
         const productId = request.params.product_id;
         const product = (await db.collection("products").doc(productId).get()).data();
 
-        if (product?.lockedBy == undefined) {
+        if (product?.status!=ProductStatus.AVAILABLE) {
             response.status(200).send();
             return;
         } else if (
@@ -79,6 +79,31 @@ combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => 
             await db.collection("products").doc(productId).update({
                 "lockedBy": request.user.user_id,
                 "lockedUntil": lockedUntil,
+                "status": ProductStatus.LOCKED,
+            });
+            response.status(200).send("This product is locked for 2minutes.");
+        }
+        response.status(200).send();
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+combatFoodApp.get("/checkout/:product_id", async (request:any, response) => {
+    // lock the item for XX min
+    try {
+        const productId = request.params.product_id;
+        const product = (await db.collection("products").doc(productId).get()).data();
+
+        if (product?.lockedBy != request.user.user_id) {
+            response.status(200).send("Illegal user");
+            return;
+        } else {
+            // get lock
+            await db.collection("products").doc(productId).update({
+                "status": ProductStatus.PURCHASED,
+                "purchasedBy": request.user.user_id,
             });
             response.status(200).send("This product is locked for 2minutes.");
         }
@@ -142,9 +167,8 @@ combatFoodApp.post("/restaurant/products", fileUploadMiddleware, async (request:
         const productInfo:PostedProduct = JSON.parse(request.body.productInfo);
         productInfo.expiredAt = new Date(productInfo.expiredAt);
         productInfo.lockedUntil = new Date(productInfo.lockedUntil);
-
+        productInfo.status = ProductStatus.AVAILABLE;
         const productId = productInfo.name + Date.now().toString();
-
         const results = await Promise.all([
             uploadImageFiles(admin, request.files, restaurantName, productId),
             db.collection("products").doc(productId).create({...productInfo}),

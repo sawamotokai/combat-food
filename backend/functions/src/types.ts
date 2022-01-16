@@ -7,11 +7,20 @@ interface PostedFiles{
     size: number
 }
 
+enum ProductStatus{
+    "AVAILABLE",
+    "LOCKED",
+    "PURCHASED",
+    "EXPIRED",
+    "DELETED"
+}
+
 interface PostedProduct{
     name: string,
     expiredAt: Date,
     lockedUntil: Date,
-    lockedBy:string
+    lockedBy:string,
+    status:ProductStatus
 }
 
 
