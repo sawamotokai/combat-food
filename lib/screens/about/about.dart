@@ -15,7 +15,7 @@ class AboutScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             "Combat food",
-            style: GoogleFonts.pacifico(),
+            style: GoogleFonts.taviraj(),
           ),
         ),
         body: SingleChildScrollView(
@@ -28,7 +28,7 @@ class AboutScreen extends StatelessWidget {
                 Text(
                   'ABOUT US',
                   textAlign: TextAlign.left,
-                  style: GoogleFonts.pacifico(),
+                  style: GoogleFonts.taviraj(),
                 ),
                 Message(),
                 BaseLayout(),

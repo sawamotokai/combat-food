@@ -31,7 +31,7 @@ class _ListItemState extends State<ListItem> {
 
   @override
   void initState() {
-    _getUrl();
+    // _getUrl();
   }
 
   @override
@@ -39,7 +39,7 @@ class _ListItemState extends State<ListItem> {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(_url),
+          backgroundImage: AssetImage(widget.imageUrl),
         ),
         title: Text(widget.title),
         subtitle: Text(widget.subtitle),

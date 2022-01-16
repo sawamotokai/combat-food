@@ -22,9 +22,10 @@ class _SettingScreen extends State<Setting> {
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.only(bottom: 120),
-      child: Container(
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // shrinkWrap: true,
+      child: SingleChildScrollView(
+        child: ListView(
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            shrinkWrap: true,
             children: [
               LogoutButtonField(),
               Padding(

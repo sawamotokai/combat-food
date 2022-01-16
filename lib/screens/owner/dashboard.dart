@@ -212,6 +212,7 @@ class _DashboardTopState extends State<DashboardTop> {
         }
 
         dynamic body = snapshot.data!.data();
+        print(snapshot.data!);
         int historyOrderSize = body['history'].length as int;
         return Container(
           child: Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BaseLayout extends StatelessWidget {
   @override
@@ -7,17 +8,14 @@ class BaseLayout extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          Text(
+          const Text(
             '\n\nOur Approach',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white),
             textAlign: TextAlign.center, 
           ),
           Text(
             '\nWe build a bridge between stores and customers: customers can efficiently sort and find their food at lower cost, while stores can offer almost expiring food at their wishing price.\n',
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.taviraj(),
             textAlign: TextAlign.center,
           ),
         ],

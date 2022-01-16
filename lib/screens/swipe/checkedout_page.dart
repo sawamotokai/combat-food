@@ -46,7 +46,7 @@ class CheckedoutPage extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'Back to Likes',
+                      'Back to Swipe',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

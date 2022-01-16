@@ -55,10 +55,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
             if (preIndex == 0) {
               // send likes list
               print('sleep start');
-              await postReq('${dotenv.env["BASE_URL"]}/likes', {
-                'likes': jsonEncode(likeList),
-                'disLikes': jsonEncode(disLikeList),
-              });
+              await Future.delayed(Duration(seconds: 1));
               print('sleep end');
             }
             setState(() {
@@ -67,12 +64,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
           },
         ),
         body: getBody(),
-        bottomSheet: BottomNavBar(),
+        bottomSheet: const BottomNavBar(),
       ),
     );
   }
 
   Widget getBody() {
+    // print(data['images']);
     return IndexedStack(
       index: pageIndex,
       children: [
@@ -99,7 +97,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
           requestBody: productsRequestBody,
         ),
         // LikesPage(),
-        Scaffold(),
+        LikesPage(
+          likes: const [0, 2],
+        ),
         Setting(),
       ],
     );

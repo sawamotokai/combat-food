@@ -1,3 +1,5 @@
+
+
 export interface PostedFiles{
     fieldname: string,
     originalname: string,
@@ -20,10 +22,11 @@ export enum ProductStatus{
 export interface PostedProduct{
     name: string,
     restaurantId:string,
+    restaurantName:string,
     price:number,
     foodType:string,
-    expiredAt: Date,
-    lockedUntil: Date,
+    expiredAt: string
+    lockedUntil: string
     lockedBy:string,
     status:ProductStatus
 }
