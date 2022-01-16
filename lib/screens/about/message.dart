@@ -16,7 +16,7 @@ class Message extends StatelessWidget {
         ),
         width: double.infinity,
         // height: 120,
-        child: Text(
+        child: Text( 
           text,
           style: GoogleFonts.taviraj(),
           textAlign: TextAlign.center,

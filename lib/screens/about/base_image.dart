@@ -9,16 +9,21 @@ class BaseLayout extends StatelessWidget {
         children: [
           Text(
             '\n\nOur Approach',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, ), textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center, 
           ),
           Text(
             '\nWe build a bridge between stores and customers: customers can efficiently sort and find their food at lower cost, while stores can offer almost expiring food at their wishing price.\n',
-            style: TextStyle(color: Colors.white), textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
       // constraints: BoxConstraints.expand(),
-      height: 300, 
+      height: 300,
       width: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(

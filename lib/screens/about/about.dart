@@ -21,11 +21,15 @@ class AboutScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.blueGrey, 
+              color: Colors.blueGrey,
             ),
             child: Column(
               children: [
-                Text('ABOUT US', textAlign: TextAlign.left, style: GoogleFonts.pacifico(),),
+                Text(
+                  'ABOUT US',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.pacifico(),
+                ),
                 Message(),
                 BaseLayout(),
                 Goal(),

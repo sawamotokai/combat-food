@@ -13,7 +13,7 @@ class Goal extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.brown.shade100,
-        ),
+        ), 
         width: double.infinity,
         // height: 120,
         child: Text(
