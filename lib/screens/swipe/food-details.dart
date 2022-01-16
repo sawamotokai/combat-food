@@ -13,7 +13,9 @@ class FoodDetails extends StatefulWidget {
 class _FoodDetailsState extends State<FoodDetails> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> data = [];
+    Widget data = Column(
+      children: [],
+    );
 
     return Scaffold(
       appBar: AppBar(),

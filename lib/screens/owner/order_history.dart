@@ -51,7 +51,6 @@ class _OrderHistoryState extends State<OrderHistory> {
               );
             }
             if (snapshot.hasData) {
-              print(snapshot.data);
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
@@ -78,23 +77,6 @@ class _OrderHistoryState extends State<OrderHistory> {
             }
             return Center(child: CircularProgressIndicator());
           },
-        ))
-        // body: ListView.builder(
-        //   itemBuilder: (context, index) {
-        //     return ListItem(
-        //       index: index,
-        //       itemList: orderList,
-        //       buttonText: 'Details',
-        //       buttonOnPressed: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //               builder: (context) => ItemDetails(data: orderList[index])),
-        //         );
-        //       },
-        //     );
-        // },
-        // itemCount: orderList.length,
-        );
+        )));
   }
 }

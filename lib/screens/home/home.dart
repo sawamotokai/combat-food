@@ -21,11 +21,12 @@ class HomeScreen extends StatelessWidget {
             return const Text('error');
           }
           if (snapshot.hasData) {
-            // return Dashboard();
+            return Dashboard();
             return SwipeScreen();
           }
-            return SwipeScreen();
-          // return const LoginScreen();
+          // return Dashboard();
+          // return SwipeScreen();
+          return const LoginScreen();
         });
   }
 }

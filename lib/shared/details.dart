@@ -7,7 +7,7 @@ class Details extends StatelessWidget {
     required this.imageUrl,
   }) : super(key: key);
 
-  final List<Widget> data;
+  final Widget data;
   final String imageUrl;
 
   @override
@@ -29,6 +29,7 @@ class Details extends StatelessWidget {
               ),
             ),
           ),
+          data
           // ListView.builder(itemBuilder: )
         ],
       ),
