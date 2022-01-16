@@ -32,7 +32,6 @@ Future<http.Response> getReq(String url) async {
 }
 
 Future<String> getImageFromFirestore(String uri) async {
-  print("STUB! TODO:");
   String url =
       await firebase_storage.FirebaseStorage.instance.ref(uri).getDownloadURL();
   print(url);

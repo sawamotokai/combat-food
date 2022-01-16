@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:core';
 import 'package:intl/intl.dart';
+import 'checkedout_page.dart';
 
 class FoodDetails extends StatelessWidget {
   const FoodDetails({Key? key, required this.data}) : super(key: key);
@@ -43,7 +44,7 @@ class FoodDetails extends StatelessWidget {
                     style: const TextStyle(fontSize: 24, color: Colors.red)),
               ],
             ),
-            Text("By: ${data['rastaurant_name']}",
+            Text("By: ${data['restaurant_name']}",
                 style: const TextStyle(fontSize: 24)),
             Text("Ordered at: ${data['expired_at']}"),
             Text("Food Type: ${data['foodType']}"),
@@ -51,8 +52,9 @@ class FoodDetails extends StatelessWidget {
         ));
     return Scaffold(
         appBar: AppBar(),
+        bottomSheet: const CheckoutBottom(),
         body: FutureBuilder(
-          future: getImageFromFirestore(data['img']!),
+          future: getImageFromFirestore(data['imageUrl']!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -74,5 +76,56 @@ class FoodDetails extends StatelessWidget {
             return Text("No Error but no data");
           },
         ));
+  }
+}
+
+class CheckoutBottom extends StatelessWidget {
+  const CheckoutBottom({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            // checkout
+            print('Checkout!');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CheckedoutPage()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                )),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 20,
+              ),
+              child: Text(
+                'Checkout',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+      ),
+    );
   }
 }

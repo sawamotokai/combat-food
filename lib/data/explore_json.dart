@@ -6,6 +6,7 @@ const List<Map<String, String>> explore_json = [
     'price': "200",
     'expired_at': "Jan, 12, 10:30",
     'productId': '0',
+    'imageUrl': 'adminRestaurant/ZZZZ1642346091910/1.png',
   },
   {
     'img': "assets/images/pizza.jpg",
@@ -14,6 +15,7 @@ const List<Map<String, String>> explore_json = [
     'restaurant_name': "Pizza Hut",
     'expired_at': "Jan, 12, 11:45",
     'productId': '1',
+    'imageUrl': 'adminRestaurant/ZZZZ1642339435322/0.png',
   },
   {
     'img': "assets/images/ramen.jpg",
@@ -22,6 +24,7 @@ const List<Map<String, String>> explore_json = [
     'price': "200",
     'expired_at': "Jan, 12, 11:00",
     'productId': '2',
+    'imageUrl': 'adminRestaurant/ZZZZ1642339435322/0.png',
   },
   {
     'img': "assets/images/chicken_wings.jpg",
@@ -30,6 +33,7 @@ const List<Map<String, String>> explore_json = [
     'expired_at': "Jan, 12, 10:10",
     'price': "200",
     'productId': '3',
+    'imageUrl': 'adminRestaurant/ZZZZ1642339435322/0.png',
   },
   {
     'img': "assets/images/rice_cooked.jpg",
@@ -38,5 +42,6 @@ const List<Map<String, String>> explore_json = [
     'price': "200",
     'expired_at': "Jan, 12, 11:10",
     'productId': '4',
+    'imageUrl': 'adminRestaurant/ZZZZ1642339435322/0.png',
   }
 ];
