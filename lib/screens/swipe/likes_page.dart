@@ -21,7 +21,12 @@ class _LikesPageState extends State<LikesPage> {
           index: index,
           itemList: explore_json,
           buttonText: 'Confirm',
-          navigatedPage: ProductDetail(),
+          buttonOnPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProductDetail()),
+            );
+          },
         );
       },
       itemCount: widget.likes.length,
