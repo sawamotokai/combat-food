@@ -171,6 +171,7 @@ class _CustomerSignUp extends State<CustomerSignUp> {
                         "phoneNumber": _phoneNumber,
                         "firstName": _firstName,
                         "lastName": _lastName,
+                        "userType": "customer",
                       };
                       AuthService()
                           .emailPasswordSignUp(_email, _password, data);
