@@ -9,20 +9,20 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Login'),
+          title: const Text('Login'),
         ),
+        backgroundColor: Colors.amber[50],
         body: Container(
             padding: const EdgeInsets.all(30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [LoginForm()],
+              children: const [LoginForm()],
             )));
   }
 }
 
 class LoginButton extends StatelessWidget {
-  final Color color;
   final IconData icon;
   final String text;
   final Function loginMethod;
@@ -31,7 +31,6 @@ class LoginButton extends StatelessWidget {
       {Key? key,
       required this.text,
       required this.icon,
-      required this.color,
       required this.loginMethod})
       : super(key: key);
 
@@ -43,7 +42,6 @@ class LoginButton extends StatelessWidget {
         icon: Icon(icon, color: Colors.white, size: 20),
         style: TextButton.styleFrom(
           padding: const EdgeInsets.all(24),
-          backgroundColor: color,
         ),
         onPressed: () => loginMethod(),
         label: Text(text),
@@ -110,6 +108,13 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       key: _formKey,
       child: Column(children: [
+        const Center(
+          child: Text('Login',
+              style: TextStyle(
+                fontSize: 30,
+                letterSpacing: 1.5,
+              )),
+        ),
         _buildEmail(),
         _buildPassword(),
         Padding(
@@ -124,14 +129,14 @@ class _LoginFormState extends State<LoginForm> {
               _formKey.currentState!.save();
               AuthService().emailPasswordSignIn(_email, _password);
             },
-            color: Colors.blue,
           ),
         ),
         TextButton(
-            onPressed: () {
-              // TODO: show registration form
-            },
-            child: const Text('Create Account')),
+          onPressed: () {
+            Navigator.of(context).pushNamed('/sign-up');
+          },
+          child: const Text('Create Account'),
+        ),
       ]),
     );
   }

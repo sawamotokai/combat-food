@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:combat_food/services/api.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
@@ -12,13 +14,14 @@ class AuthService {
     }
   }
 
-  Future<void> emailPasswordSignUp(String email, String password) async {
+  Future<void> emailPasswordSignUp(
+      String email, String password, Map<String, String> data) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      // TODO: API call to create a user document with information
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      var url = '${dotenv.env["BASE_URL"]}/api/user/signup';
+      var res = await postReq(url, data);
+      print(res.statusCode);
     } on FirebaseAuthException catch (e) {
       print(e);
     }

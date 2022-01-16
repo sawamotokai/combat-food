@@ -1,0 +1,20 @@
+
+Base Endpoint
+https://us-central1-combatfoodapi.cloudfunctions.net/api/
+
+
+/api
+    /restaurant
+        /signup
+        /signin  
+        /products
+        /products/:product_id
+        
+    /user
+        /signup
+        /signin
+        
+    /foods
+    /likes
+    /likes/:product_id
+    /checkout/:product_id
