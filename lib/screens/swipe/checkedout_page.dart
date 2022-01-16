@@ -9,15 +9,15 @@ class CheckedoutPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        color: Colors.lightGreenAccent,
+        color: Colors.orange,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Center(
               child: Text(
-                'Thank you for checking out!!!',
+                'Thank you for checking out!!!\nEnjoy the food!',
                 style: TextStyle(
-                  fontSize: 50,
+                  fontSize: 30,
                 ),
                 textAlign: TextAlign.center,
               ),
