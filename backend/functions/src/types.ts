@@ -7,6 +7,7 @@ export interface PostedFiles{
     size: number
 }
 
+
 export enum ProductStatus{
     "AVAILABLE",
     "LOCKED",
@@ -15,10 +16,12 @@ export enum ProductStatus{
     "DELETED"
 }
 
+
 export interface PostedProduct{
     name: string,
     restaurantId:string,
-    price:number
+    price:number,
+    foodType:string,
     expiredAt: Date,
     lockedUntil: Date,
     lockedBy:string,

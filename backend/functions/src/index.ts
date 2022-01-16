@@ -174,7 +174,7 @@ combatFoodApp.post("/restaurant/products", fileUploadMiddleware, async (request:
 
         const productInfo:PostedProduct = JSON.parse(request.body.productInfo);
         productInfo.expiredAt = new Date(productInfo.expiredAt);
-        productInfo.lockedUntil = new Date(productInfo.lockedUntil);
+        productInfo.lockedUntil = new Date(0);
         productInfo.status = ProductStatus.AVAILABLE;
         productInfo.restaurantId = restaurantId;
         const productId = productInfo.name + Date.now().toString();
