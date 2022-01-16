@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:combat_food/services/dio_api.dart';
+import 'package:combat_food/shared/food_type_enum.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
@@ -10,20 +14,7 @@ import 'package:select_form_field/select_form_field.dart';
 
 enum ItemType { ingredient, dish }
 
-final List<Map<String, dynamic>> _items = [
-  {
-    'value': 'jp',
-    'label': 'Japanese',
-  },
-  {
-    'value': 'italy',
-    'label': 'Italian',
-  },
-  {
-    'value': 'france',
-    'label': 'France',
-  },
-];
+final List<Map<String, dynamic>> _items = FoodTypesMap;
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
@@ -37,15 +28,14 @@ class _NewPostState extends State<NewPost> {
   NumberFormat numFormat = NumberFormat('###,###.00', 'en_US');
   NumberFormat numSanitizedFormat = NumberFormat('en_US');
   var currency = 'USD';
-  var defaultPrice = '0.00';
 
   // form variables
   XFile? _image;
   String? itemName;
-  String? itemPrice;
+  String itemPrice = '0.00';
   DateTime? expiredAt;
   ItemType _itemType = ItemType.ingredient;
-  String? foodType;
+  String foodType = _items[0]['value'];
 
   final picker = ImagePicker();
 
@@ -63,8 +53,20 @@ class _NewPostState extends State<NewPost> {
     });
   }
 
+  bool validate() {
+    return _image != null &&
+        itemName != '' &&
+        itemName != null &&
+        itemPrice != '' &&
+        expiredAt != null &&
+        foodType != null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isValid = validate();
+    print(isValid);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -126,15 +128,32 @@ class _NewPostState extends State<NewPost> {
                   ),
                 ),
               ),
-              const ItenNameForm(),
+              ItenNameForm(
+                setState: (value) {
+                  setState(() {
+                    itemName = value;
+                  });
+                },
+              ),
               PriceForm(
                 currency: currency,
                 subscriptionPriceController: _subscriptionPriceController,
-                defaultPrice: defaultPrice,
+                defaultPrice: itemPrice,
                 numSanitizedFormat: numSanitizedFormat,
                 numFormat: numFormat,
+                setState: (value) {
+                  setState(() {
+                    itemPrice = value;
+                  });
+                },
               ),
-              BasicDateTimeField(),
+              BasicDateTimeField(
+                setState: (value) {
+                  setState(() {
+                    expiredAt = value;
+                  });
+                },
+              ),
               Column(
                 children: [
                   const Text(
@@ -203,7 +222,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     SelectFormField(
                       type: SelectFormFieldType.dropdown, // or can be dialog
-                      initialValue: 'jp',
+                      initialValue: foodType,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.format_shapes,
@@ -218,8 +237,11 @@ class _NewPostState extends State<NewPost> {
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
-                      onChanged: (val) => print(val),
-                      onSaved: (val) => print(val),
+                      onChanged: (val) {
+                        setState(() {
+                          foodType = val;
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -242,22 +264,45 @@ class _NewPostState extends State<NewPost> {
               const SizedBox(
                 height: 50,
               ),
-              Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                child: const Center(
-                  child: Text(
-                    'Create New Post',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+              GestureDetector(
+                child: Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Center(
+                    child: Text(
+                      isValid ? 'Create New Post' : 'Hold On ...',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
+                onTap: isValid
+                    ? () async {
+                        print('new post');
+                        dynamic body = {
+                          'productInfo': {
+                            'name': itemName,
+                            'expiredAt': expiredAt,
+                            'foodType': foodType,
+                            'price': itemPrice,
+                            'itemType': _itemType,
+                          },
+                          'photo': await await MultipartFile.fromFile(
+                            _image!.path,
+                            filename: _image!.path,
+                          )
+                        };
+                        String url =
+                            '${dotenv.env["BASE_URL"]}/restaurant/products';
+                        dynamic response = await postReq(url, body);
+                      }
+                    : null,
               )
             ],
           ),
@@ -267,7 +312,13 @@ class _NewPostState extends State<NewPost> {
   }
 }
 
+typedef DateTimeCallback = void Function(DateTime id);
+
 class BasicDateTimeField extends StatelessWidget {
+  BasicDateTimeField({required this.setState});
+
+  final DateTimeCallback setState;
+
   final format = DateFormat("yyyy-MM-dd  HH:mm");
 
   @override
@@ -312,12 +363,17 @@ class BasicDateTimeField extends StatelessWidget {
                   initialTime:
                       TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                 );
-                return DateTimeField.combine(date, time);
+                DateTime result = DateTimeField.combine(date, time);
+                setState(result);
+                return result;
               } else {
+                setState(currentValue!);
                 return currentValue;
               }
             },
-            onSaved: (dateTime) {},
+            onSaved: (dateTime) {
+              setState(dateTime!);
+            },
           ),
         ),
       ),
@@ -325,10 +381,15 @@ class BasicDateTimeField extends StatelessWidget {
   }
 }
 
+typedef StringCallback = void Function(String id);
+
 class ItenNameForm extends StatelessWidget {
   const ItenNameForm({
     Key? key,
+    required this.setState,
   }) : super(key: key);
+
+  final StringCallback setState;
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +419,9 @@ class ItenNameForm extends StatelessWidget {
               ? 'Do not use the @ char.'
               : null;
         },
-        onChanged: (String value) {},
+        onChanged: (String value) {
+          setState(value);
+        },
         textInputAction: TextInputAction.next,
       ),
     );
@@ -373,6 +436,7 @@ class PriceForm extends StatelessWidget {
     required this.defaultPrice,
     required this.numSanitizedFormat,
     required this.numFormat,
+    required this.setState,
   })  : _subscriptionPriceController = subscriptionPriceController,
         super(key: key);
 
@@ -381,6 +445,7 @@ class PriceForm extends StatelessWidget {
   final String defaultPrice;
   final NumberFormat numSanitizedFormat;
   final NumberFormat numFormat;
+  final StringCallback setState;
 
   @override
   Widget build(BuildContext context) {
@@ -396,6 +461,7 @@ class PriceForm extends StatelessWidget {
             LineIcons.wallet,
             color: Colors.black,
           ),
+          hintText: '0.00',
           prefixText:
               NumberFormat.simpleCurrency(name: currency).currencySymbol,
           label: const Text(
@@ -417,24 +483,8 @@ class PriceForm extends StatelessWidget {
           return null;
         },
         textInputAction: TextInputAction.next,
-        controller: _subscriptionPriceController..text = defaultPrice,
-        onTap: () {
-          var textFieldNum = _subscriptionPriceController.value.text;
-          var numSanitized = numSanitizedFormat.parse(textFieldNum);
-          _subscriptionPriceController.value = TextEditingValue(
-            /// Clear if TextFormField value is 0
-            text: numSanitized == 0 ? '' : '$numSanitized',
-            selection: TextSelection.collapsed(offset: '$numSanitized'.length),
-          );
-        },
-        onFieldSubmitted: (price) {
-          /// Set value to 0 if TextFormField value is empty
-          if (price == '') price = '0';
-          final formattedPrice = numFormat.format(double.parse(price));
-          _subscriptionPriceController.value = TextEditingValue(
-            text: formattedPrice,
-            selection: TextSelection.collapsed(offset: formattedPrice.length),
-          );
+        onChanged: (String value) {
+          setState(value);
         },
       ),
     );

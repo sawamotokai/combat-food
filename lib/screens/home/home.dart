@@ -26,10 +26,10 @@ class HomeScreen extends StatelessWidget {
 
             // TODO: fetch user and decide which screen to render (dashboard or preference)
             // return Dashboard();
-            return SwipeScreen();
+            return Dashboard();
           }
           // return SwipeScreen();
-          return SwipeScreen();
+          return Dashboard();
           // return const LoginScreen();
         });
   }

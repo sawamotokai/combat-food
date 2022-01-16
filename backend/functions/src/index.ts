@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import {validateFirebaseIdToken} from "./auth";
 import * as fileUploadMiddleware from "busboy-firebase";
 import {getValidLikes, uploadImageFiles} from "./utils";
-
+import {ProductStatus, LikesDislikes, PostedProduct} from "./types";
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -23,6 +23,7 @@ combatFoodApp.post("/user/signup", async (request:any, response) => {
         response.status(201).send("Account was succesfully created.");
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -39,6 +40,7 @@ combatFoodApp.post("/restaurant/signup", async (request:any, response) => {
         response.status(201).send("Account was succesfully created.");
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -46,12 +48,38 @@ combatFoodApp.post("/restaurant/signup", async (request:any, response) => {
 
 combatFoodApp.get("/products", async (request:any, response) => {
     // TODO: return 10 images?
+    // not dislikes and not purchased, not locked
     try {
-        // const userId = request.user.user_id;
-        console.log("test");
-        response.status(200).send();
+        const userId = request.user.user_id;
+        const ng = new Set([
+            ...(await db.collection("users").doc(userId).get()).data()?.dislikes,
+            ...(await db.collection("users").doc(userId).get()).data()?.likes]);
+        const query = await db.collection("products")
+            .where("status", "==", ProductStatus.AVAILABLE)
+            .where("expiredAt", ">=", admin.firestore.Timestamp.fromDate(new Date())).get();
+        const productsList = new Set(query.docs.map((doc)=>{
+            console.log(doc.id);
+            return doc.id;
+        }));
+        const validProducts = new Set([...productsList].filter((e) => (!ng.has(e))));
+        // const allProducts = await db.collection("products");
+        if (validProducts.size<=1) {
+            response.status(200).send({productsIdList: []});
+            return;
+        }
+        console.log(validProducts);
+        const allList = [...validProducts];
+        const trimedList:string[] = allList.length>=10?allList.slice(0, 10):allList;
+        const dataList = await Promise.all(trimedList.map((productId:string)=>db.collection("products").doc(productId).get()));
+        console.log(dataList);
+        dataList.forEach((e)=>e.data());
+        console.log(dataList);
+        response.status(200).send({
+            "productsIdList": [...dataList],
+        });
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -64,7 +92,7 @@ combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => 
         const product = (await db.collection("products").doc(productId).get()).data();
 
         if (product?.status!=ProductStatus.AVAILABLE) {
-            response.status(200).send();
+            response.status(200).send("This product is not available now");
             return;
         } else if (
             product?.lockedBy != request.user.user_id &&
@@ -86,30 +114,44 @@ combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => 
         response.status(200).send();
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
 
 combatFoodApp.get("/checkout/:product_id", async (request:any, response) => {
-    // lock the item for XX min
     try {
         const productId = request.params.product_id;
         const product = (await db.collection("products").doc(productId).get()).data();
-
-        if (product?.lockedBy != request.user.user_id) {
+        const restaurantId = product?.restaurantId;
+        if (!product) {
+            response.status(200).send("empty");
+            return;
+        }
+        if ( !(product.status==ProductStatus.LOCKED && product.lockedBy==request.user.user_id) ) {
             response.status(200).send("Illegal user");
             return;
-        } else {
-            // get lock
-            await db.collection("products").doc(productId).update({
-                "status": ProductStatus.PURCHASED,
-                "purchasedBy": request.user.user_id,
-            });
-            response.status(200).send("This product is locked for 2minutes.");
         }
+        await db.collection("products").doc(productId).update({
+            "status": ProductStatus.PURCHASED,
+            "purchasedBy": request.user.user_id,
+        });
+        await db.collection("restaurants").doc(restaurantId).update({
+            "history": admin.firestore.FieldValue.arrayUnion({
+                "imageUrl": productId,
+                "customer_fullname": (await db.collection("users").doc(request.user.user_id).get()).data()?.name,
+                "ordered_at": String(new Date()),
+                "price": product?.price1,
+                ...product,
+            }),
+        });
+        console.log("AAAAAAAAAAAAA");
+        response.status(200).send("Purchased!!");
+
         response.status(200).send();
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -135,6 +177,7 @@ combatFoodApp.post("/likes", async (request:any, response) => {
         response.status(200).send({"likes": likes});
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -151,6 +194,7 @@ combatFoodApp.get("/likes", async (request:any, response) => {
         response.status(200).send({"likes": likes});
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
         response.status(500).send(error);
     }
 });
@@ -166,20 +210,39 @@ combatFoodApp.post("/restaurant/products", fileUploadMiddleware, async (request:
 
         const productInfo:PostedProduct = JSON.parse(request.body.productInfo);
         productInfo.expiredAt = new Date(productInfo.expiredAt);
-        productInfo.lockedUntil = new Date(productInfo.lockedUntil);
+        productInfo.lockedUntil = new Date(0);
         productInfo.status = ProductStatus.AVAILABLE;
+        productInfo.restaurantId = restaurantId;
         const productId = productInfo.name + Date.now().toString();
-        const results = await Promise.all([
+        await Promise.all([
             uploadImageFiles(admin, request.files, restaurantName, productId),
             db.collection("products").doc(productId).create({...productInfo}),
             db.collection("restaurants").doc(restaurantId).update({
                 products: admin.firestore.FieldValue.arrayUnion(productId),
             }),
         ]);
-        console.log(results);
-        response.status(200).send(results);
+        console.log(productId);
+        response.status(200).send(productId);
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
+        response.status(500).send("Failed");
+    }
+});
+
+
+combatFoodApp.delete("/restaurant/products/:products_id", fileUploadMiddleware, async (request:any, response:any)=>{
+    try {
+        const restaurantId = request.user.user_id;
+        const snapshot = await db.collection("restaurants").doc(restaurantId).get();
+        const restaurantName = snapshot.data()?.name;
+        if (!restaurantName)response.status(500).send("Invalid restaurant");
+        console.log("RestaurantName: ", restaurantName);
+        await db.collection("products").doc(request.params.products_id).update({status: ProductStatus.DELETED});
+        response.status(202).send("Deleted");
+    } catch (error) {
+        console.log(error);
+        functions.logger.error(error);
         response.status(500).send("Failed");
     }
 });
@@ -193,6 +256,32 @@ combatFoodApp.get("/restaurant/products", async (request:any, response:any)=>{
         response.status(200).send({"products": products});
     } catch (error) {
         console.log(error);
+        functions.logger.error(error);
+        response.status(500).send("Failed");
+    }
+});
+
+
+combatFoodApp.get("/restaurant/history", async (request:any, response:any)=>{
+    try {
+        //
+        const restaurantId = request.user.user_id;
+        const history = (await db.collection("restaurants").doc(restaurantId).get()).data()?.history;
+        // console
+        if (!history) {
+            response.status(200).send({
+                "orders": [],
+            });
+            return;
+        }
+
+        console.log([...history]);
+        response.status(200).send({
+            "orders": history,
+        });
+    } catch (error) {
+        console.log(error);
+        functions.logger.error(error);
         response.status(500).send("Failed");
     }
 });
