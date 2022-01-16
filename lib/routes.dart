@@ -11,5 +11,5 @@ var appRoutes = {
   '/sing-up': (context) => const SignUpScreen(),
   '/profile': (context) => const ProfileScreen(),
   '/about': (context) => const AboutScreen(),
-  '/swipe': (context) => const SwipeScreen()
+  '/swipe': (context) => SwipeScreen()
 };

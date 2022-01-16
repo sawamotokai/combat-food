@@ -34,7 +34,10 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(routes: appRoutes, theme: appTheme);
         }
 
-        return const Text("loading");
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: const Text("loading"),
+        );
       },
     );
   }
