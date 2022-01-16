@@ -6,7 +6,7 @@ class DistanceField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(6.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white70,
