@@ -5,6 +5,7 @@ import {validateFirebaseIdToken} from "./auth";
 import * as fileUploadMiddleware from "busboy-firebase";
 import {uploadImageFiles, registerProducts} from "./utils";
 
+
 admin.initializeApp();
 const db = admin.firestore();
 const combatFoodApp = express();
@@ -75,6 +76,7 @@ combatFoodApp.post("/likes", async (request:any, response) => {
         const snapshot = await db.collection("users").doc(userId).get();
         const likes = new Set(snapshot.data()?.likes);
         const disLikes = new Set(snapshot.data()?.dislikes);
+
         likesDislikes.likes.forEach((item)=>likes.add(item));
         likesDislikes.disLikes.forEach((item)=>disLikes.add(item));
 
@@ -102,11 +104,7 @@ combatFoodApp.get("/likes", async (request:any, response) => {
         await Promise.all(allLikes.map(async (productId:string)=>{
             const expTimeStamp = (await db.collection("products").doc(productId).get()).data()?.expiredAt;
             if (!expTimeStamp) return;
-            const expire = Number(String(expTimeStamp.seconds) + String(expTimeStamp.nanoseconds/1000000));
-            if (expire<=Date.now()) {
-                console.log("ifif");
-                likes.push(productId);
-            }
+            if (expTimeStamp>admin.firestore.Timestamp.fromDate(new Date())) likes.push(productId);
         }));
         console.log(likes);
         response.status(200).send({"likes": likes});
