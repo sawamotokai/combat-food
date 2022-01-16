@@ -1,13 +1,15 @@
-const List explore_json = [
+const List<Map<String, String>> explore_json = [
   {
     'img': "assets/images/sushi.jpg",
     'product_name': "sushi",
     'restaurant_name': "JP restaurant",
+    'price': "200",
     'expired_at': "Jan, 12, 10:30",
   },
   {
     'img': "assets/images/pizza.jpg",
     'product_name': "pizza",
+    'price': "200",
     'restaurant_name': "Pizza Hut",
     'expired_at': "Jan, 12, 11:45",
   },
@@ -15,6 +17,7 @@ const List explore_json = [
     'img': "assets/images/ramen.jpg",
     'product_name': "ramen",
     'restaurant_name': "Gonzo",
+    'price': "200",
     'expired_at': "Jan, 12, 11:00",
   },
   {
@@ -22,11 +25,13 @@ const List explore_json = [
     'product_name': "chicken wings",
     'restaurant_name': "Chicken Free",
     'expired_at': "Jan, 12, 10:10",
+    'price': "200",
   },
   {
     'img': "assets/images/rice_cooked.jpg",
     'product_name': "rice bento",
     'restaurant_name': "Komia",
+    'price': "200",
     'expired_at': "Jan, 12, 11:10",
   }
 ];
