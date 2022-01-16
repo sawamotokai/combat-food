@@ -55,10 +55,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
             if (preIndex == 0) {
               // send likes list
               print('sleep start');
-              await postReq('${dotenv.env["BASE_URL"]}/likes', {
-                'likes': jsonEncode(likeList),
-                'disLikes': jsonEncode(disLikeList),
-              });
+              await Future.delayed(Duration(seconds: 1));
               print('sleep end');
             }
             setState(() {
@@ -77,47 +74,32 @@ class _SwipeScreenState extends State<SwipeScreen> {
     return IndexedStack(
       index: pageIndex,
       children: [
-        FutureBuilder(
-          future: getExploreItems(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text("${snapshot.error}"),
-              );
-            } else if (snapshot.hasData) {
-              ExplorePage(
-                data: snapshot.data! as Map<String, dynamic>,
-                goToLikes: () async {
-                  // send likes list
-                  print('sleep start');
-                  setState(() {
-                    inProgress = true;
-                    pageIndex = 1;
-                  });
-                  await Future.delayed(Duration(seconds: 3));
-                  print('sleep end');
-                  setState(() {
-                    inProgress = false;
-                  });
-                },
-                addLikes: (String proudctId) {
-                  likeList.add(proudctId);
-                },
-                addDisLikes: (String productId) {
-                  disLikeList.add(productId);
-                },
-                requestBody: productsRequestBody,
-              );
-            }
-            return Text("No data");
+        ExplorePage(
+          goToLikes: () async {
+            // send likes list
+            print('sleep start');
+            setState(() {
+              inProgress = true;
+              pageIndex = 1;
+            });
+            await Future.delayed(Duration(seconds: 3));
+            print('sleep end');
+            setState(() {
+              inProgress = false;
+            });
           },
+          addLikes: (String proudctId) {
+            likeList.add(proudctId);
+          },
+          addDisLikes: (String productId) {
+            disLikeList.add(productId);
+          },
+          requestBody: productsRequestBody,
         ),
         // LikesPage(),
-        Scaffold(),
+        LikesPage(
+          likes: const [0, 2],
+        ),
         Setting(),
       ],
     );

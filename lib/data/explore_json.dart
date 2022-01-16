@@ -4,29 +4,34 @@ const List explore_json = [
     'product_name': "sushi",
     'restaurant_name': "JP restaurant",
     'expired_at': "Jan, 12, 10:30",
+    'productId': '0',
   },
   {
     'img': "assets/images/pizza.jpg",
     'product_name': "pizza",
     'restaurant_name': "Pizza Hut",
     'expired_at': "Jan, 12, 11:45",
+    'productId': '1',
   },
   {
     'img': "assets/images/ramen.jpg",
     'product_name': "ramen",
     'restaurant_name': "Gonzo",
     'expired_at': "Jan, 12, 11:00",
+    'productId': '2',
   },
   {
     'img': "assets/images/chicken_wings.jpg",
     'product_name': "chicken wings",
     'restaurant_name': "Chicken Free",
     'expired_at': "Jan, 12, 10:10",
+    'productId': '3',
   },
   {
     'img': "assets/images/rice_cooked.jpg",
     'product_name': "rice bento",
     'restaurant_name': "Komia",
     'expired_at': "Jan, 12, 11:10",
+    'productId': '4',
   }
 ];

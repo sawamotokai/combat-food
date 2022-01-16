@@ -18,14 +18,12 @@ enum VisibleState {
 
 class ExplorePage extends StatefulWidget {
   ExplorePage({
-    required this.data,
     required this.goToLikes,
     required this.addLikes,
     required this.requestBody,
     required this.addDisLikes,
   });
 
-  final Map<String, dynamic> data;
   final VoidCallback goToLikes;
   final StringCallback addLikes;
   final StringCallback addDisLikes;
@@ -36,6 +34,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
+  List itemsTemp = [];
   int itemLength = 0;
 
   CardController? controller;
@@ -45,30 +44,24 @@ class _ExplorePageState extends State<ExplorePage> {
 
   List<VisibleState> cardStates = [];
 
-  dynamic exploreItems;
-
   @override
   void initState() {
     super.initState();
-    getExploreItems();
+    setState(() {
+      itemsTemp = explore_json;
+      itemLength = explore_json.length;
+      stackIndex = 0;
+      cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.data['images']);
     return getBody();
   }
 
   Widget getBody() {
     Size size = MediaQuery.of(context).size;
-
-    List urls = List.generate(exploreItems.length, (index) async {
-      try {
-        return await getImageFromFirestore(exploreItems[index]['imgUrl']);
-      } catch (e) {
-        print(e);
-      }
-    });
 
     return Padding(
       padding: EdgeInsets.only(bottom: 120),
@@ -80,10 +73,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
               if (orientation == CardSwipeOrientation.RIGHT) {
-                widget.addLikes(exploreItems[index]['productId']);
+                widget.addLikes(explore_json[index]['productId']);
               }
               if (orientation == CardSwipeOrientation.LEFT) {
-                widget.addDisLikes(exploreItems[index]['productId']);
+                widget.addDisLikes(explore_json[index]['productId']);
               }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
@@ -128,7 +121,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       height: size.height,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(urls[index]),
+                          image: AssetImage(itemsTemp[index]['img']),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -168,7 +161,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              exploreItems[index]['name'],
+                                              itemsTemp[index]['product_name'],
                                               style: const TextStyle(
                                                 fontSize: 26,
                                                 color: Colors.white,
@@ -190,8 +183,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              exploreItems[index]
-                                                  ['restaurantName'],
+                                              itemsTemp[index]
+                                                  ['restaurant_name'],
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.white,
@@ -229,8 +222,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   top: 3,
                                                 ),
                                                 child: Text(
-                                                  exploreItems[index]
-                                                      ['expiredAt'],
+                                                  itemsTemp[index]
+                                                      ['expired_at'],
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,
@@ -430,7 +423,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.dislike;
                 });
-                widget.addDisLikes(exploreItems[currentIndex]['productId']);
+                widget.addDisLikes(explore_json[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/dislike.svg",
@@ -444,7 +437,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.like;
                 });
-                widget.addLikes(exploreItems[currentIndex]['productId']);
+                widget.addLikes(explore_json[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/like.svg",
