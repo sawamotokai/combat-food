@@ -18,7 +18,7 @@ class BaseLayout extends StatelessWidget {
         ],
       ),
       // constraints: BoxConstraints.expand(),
-      height: 300,
+      height: 300, 
       width: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(

@@ -6,7 +6,8 @@ class Goal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String text = ' \nOUR GOAL\n\nOur goal is to minimize food waste while stores can still make some money and customers can get the food at lower price. To achieve sustainable and environmental friendly society, we beleive this will be a some progress to all of us.\n';
+    String text =
+        ' \nOUR GOAL\n\nOur goal is to minimize food waste while stores can still make some money and customers can get the food at lower price. To achieve sustainable and environmental friendly society, we beleive this will be a some progress to all of us.\n';
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 0),
       child: Container(
@@ -15,7 +16,11 @@ class Goal extends StatelessWidget {
         ),
         width: double.infinity,
         // height: 120,
-        child: Text(text, style: GoogleFonts.taviraj(), textAlign: TextAlign.center,),
+        child: Text(
+          text,
+          style: GoogleFonts.taviraj(),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

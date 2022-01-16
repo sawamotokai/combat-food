@@ -7,7 +7,7 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String text = ' \nCOMBAT FOOD IS DESIGNED MINIMIZE THE AMOUNT OF' +
-    ' FOOD WASTE BY CONNECTING STORES AND INDIVIDUALS.\n';
+        ' FOOD WASTE BY CONNECTING STORES AND INDIVIDUALS.\n';
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 0),
       child: Container(
@@ -16,7 +16,11 @@ class Message extends StatelessWidget {
         ),
         width: double.infinity,
         // height: 120,
-        child: Text(text, style: GoogleFonts.taviraj(), textAlign: TextAlign.center,),
+        child: Text(
+          text,
+          style: GoogleFonts.taviraj(),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

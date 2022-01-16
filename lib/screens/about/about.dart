@@ -21,7 +21,7 @@ class AboutScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: Colors.blueGrey, 
             ),
             child: Column(
               children: [
