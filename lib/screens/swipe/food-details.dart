@@ -1,30 +1,81 @@
+import 'package:combat_food/services/api.dart';
 import 'package:combat_food/shared/details.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:math';
+import 'dart:core';
+import 'package:intl/intl.dart';
 import 'checkedout_page.dart';
 
-class FoodDetails extends StatefulWidget {
-  const FoodDetails({Key? key}) : super(key: key);
+class FoodDetails extends StatelessWidget {
+  const FoodDetails({Key? key, required this.data}) : super(key: key);
+  final Map<String, String> data;
 
-  @override
-  _FoodDetailsState createState() => _FoodDetailsState();
-}
-
-class _FoodDetailsState extends State<FoodDetails> {
   @override
   Widget build(BuildContext context) {
-    Widget data = Column(
-      children: [],
-    );
+    String price = data['price'].toString();
+    bool dot = false;
+    for (var i = 0; i < price.length; i++) {
+      if (price[i] == '.') {
+        price = price.substring(0, i) +
+            '.' +
+            price.substring(i + 1, min(2, price.length - 1));
+        dot = true;
+        break;
+      }
+    }
+    if (dot == false) {
+      price = price + '.00';
+    }
 
+    Widget wid = Container(
+        margin: const EdgeInsets.symmetric(horizontal: 50),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(data['product_name']!,
+                  style: const TextStyle(fontSize: 32, letterSpacing: 1.5)),
+            ),
+            const Divider(),
+            Row(
+              children: [
+                Text('Price: ', style: const TextStyle(fontSize: 20)),
+                Text('\$$price',
+                    style: const TextStyle(fontSize: 24, color: Colors.red)),
+              ],
+            ),
+            Text("By: ${data['restaurant_name']}",
+                style: const TextStyle(fontSize: 24)),
+            Text("Ordered at: ${data['expired_at']}"),
+            Text("Food Type: ${data['foodType']}"),
+          ],
+        ));
     return Scaffold(
-      appBar: AppBar(),
-      body: Details(
-          imageUrl:
-              'https://images.unsplash.com/photo-1587410131477-f01b22c59e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGFsbCUyMHRvd2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
-          data: data),
-      bottomSheet: const CheckoutBottom(),
-    );
+        appBar: AppBar(),
+        bottomSheet: const CheckoutBottom(),
+        body: FutureBuilder(
+          future: getImageFromFirestore(data['imageUrl']!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Column(
+                  children: const [
+                    Text("Loading..."),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return Details(
+                data: wid,
+                imageUrl: snapshot.data! as String,
+              );
+            }
+            return Text("No Error but no data");
+          },
+        ));
   }
 }
 

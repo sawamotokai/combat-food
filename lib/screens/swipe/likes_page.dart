@@ -18,14 +18,15 @@ class _LikesPageState extends State<LikesPage> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return ListItem(
-          imageUrl: explore_json[widget.likes[index]]['img'],
-          title: explore_json[widget.likes[index]]['product_name'],
-          subtitle: explore_json[widget.likes[index]]['restaurant_name'],
+          imageUrl: explore_json[widget.likes[index]]['img']!,
+          title: explore_json[widget.likes[index]]['product_name']!,
+          subtitle: explore_json[widget.likes[index]]['restaurant_name']!,
           buttonText: 'Confirm',
           buttonOnPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => FoodDetails()),
+              MaterialPageRoute(
+                  builder: (context) => FoodDetails(data: explore_json[index])),
             );
           },
         );

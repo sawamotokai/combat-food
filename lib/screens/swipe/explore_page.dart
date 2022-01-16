@@ -73,10 +73,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
               if (orientation == CardSwipeOrientation.RIGHT) {
-                widget.addLikes(explore_json[index]['productId']);
+                widget.addLikes(explore_json[index]['productId']!);
               }
               if (orientation == CardSwipeOrientation.LEFT) {
-                widget.addDisLikes(explore_json[index]['productId']);
+                widget.addDisLikes(explore_json[index]['productId']!);
               }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
@@ -423,7 +423,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.dislike;
                 });
-                widget.addDisLikes(explore_json[currentIndex]['productId']);
+                widget.addDisLikes(explore_json[currentIndex]['productId']!);
               },
               child: BottomIcon(
                 assetName: "assets/images/dislike.svg",
@@ -437,7 +437,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.like;
                 });
-                widget.addLikes(explore_json[currentIndex]['productId']);
+                widget.addLikes(explore_json[currentIndex]['productId']!);
               },
               child: BottomIcon(
                 assetName: "assets/images/like.svg",
