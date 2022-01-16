@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:combat_food/services/api.dart';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
@@ -14,11 +15,11 @@ class AuthService {
 
   Future<void> emailPasswordSignUp(String email, String password) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       // TODO: API call to create a user document with information
+      // var res = await postReq();
+      // print(res.statusCode);
     } on FirebaseAuthException catch (e) {
       print(e);
     }

@@ -34,7 +34,11 @@ class _CustomerSignUp extends State<CustomerSignUp> {
         return null;
       },
       onSaved: (String? email) {
-        if (email != null) _email = email;
+        if (email != null) {
+          setState(() {
+            _email = email;
+          });
+        }
       },
     );
   }
@@ -51,7 +55,11 @@ class _CustomerSignUp extends State<CustomerSignUp> {
         return null;
       },
       onSaved: (String? phoneNumber) {
-        if (phoneNumber != null) _phoneNumber = phoneNumber;
+        if (phoneNumber != null) {
+          setState(() {
+            _phoneNumber = phoneNumber;
+          });
+        }
       },
     );
   }
@@ -62,7 +70,11 @@ class _CustomerSignUp extends State<CustomerSignUp> {
       validator: (String? value) =>
           value != null && value.isEmpty ? 'First Name is Required.' : null,
       onSaved: (String? firstName) {
-        if (firstName != null) _firstName = firstName;
+        if (firstName != null) {
+          setState(() {
+            _firstName = firstName;
+          });
+        }
       },
     );
   }
@@ -73,7 +85,11 @@ class _CustomerSignUp extends State<CustomerSignUp> {
       validator: (String? value) =>
           value != null && value.isEmpty ? 'Last Name is Required.' : null,
       onSaved: (String? lastName) {
-        if (lastName != null) _lastName = lastName;
+        if (lastName != null) {
+          setState(() {
+            _lastName = lastName;
+          });
+        }
       },
     );
   }
@@ -127,40 +143,34 @@ class _CustomerSignUp extends State<CustomerSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-        backgroundColor: Colors.green[700],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-            margin: const EdgeInsets.all(30),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildEmail(),
-                  _buildPhoneNumber(),
-                  _buildFirstName(),
-                  _buildLastName(),
-                  _buildPassword(),
-                  _buildConfirmationPassword(),
-                  const SizedBox(height: 100),
-                  ElevatedButton.icon(
-                    icon: const Icon(FontAwesomeIcons.arrowAltCircleUp),
-                    label: const Text('Sign Up'),
-                    onPressed: () {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      _formKey.currentState!.save();
-                      AuthService().emailPasswordSignUp(_email, _password);
-                    },
-                  ),
-                ],
-              ),
-            )),
-      ),
+    return SingleChildScrollView(
+      child: Container(
+          margin: const EdgeInsets.all(30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _buildEmail(),
+                _buildPhoneNumber(),
+                _buildFirstName(),
+                _buildLastName(),
+                _buildPassword(),
+                _buildConfirmationPassword(),
+                const SizedBox(height: 100),
+                ElevatedButton.icon(
+                  icon: const Icon(FontAwesomeIcons.arrowAltCircleUp),
+                  label: const Text('Sign Up'),
+                  onPressed: () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    _formKey.currentState!.save();
+                    AuthService().emailPasswordSignUp(_email, _password);
+                  },
+                ),
+              ],
+            ),
+          )),
     );
   }
 }

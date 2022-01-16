@@ -24,61 +24,65 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _userType = UserType.customer;
   }
 
-  Widget getBody() {
-    return IndexedStack(index: pageIndex, children: [
-      Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              ListTile(
-                title: const Text('Customer'),
-                leading: Radio<UserType>(
-                  value: UserType.customer,
-                  groupValue: _userType,
-                  onChanged: (UserType? value) {
-                    if (value != null) {
-                      setState(() {
-                        _userType = value;
-                      });
-                    }
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Vendor'),
-                leading: Radio<UserType>(
-                  value: UserType.vendor,
-                  groupValue: _userType,
-                  onChanged: (UserType? value) {
-                    if (value != null) {
-                      setState(() {
-                        _userType = value;
-                      });
-                    }
-                  },
-                ),
-              ),
-              ElevatedButton(
-                child: const Text('Next'),
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 1;
-                  });
-                },
-              ),
-            ],
-          )),
-      CustomerSignUp(),
-      VendorSignUp(),
-    ]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Sign Up'),
-        ),
-        body: getBody());
+      appBar: AppBar(
+        title: Text('Sign Up'),
+      ),
+      body: IndexedStack(index: pageIndex, children: [
+        Container(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ListTile(
+              title: const Text('Customer'),
+              leading: Radio<UserType>(
+                value: UserType.customer,
+                groupValue: _userType,
+                onChanged: (UserType? value) {
+                  if (value != null) {
+                    setState(() {
+                      _userType = value;
+                    });
+                  }
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Vendor'),
+              leading: Radio<UserType>(
+                value: UserType.vendor,
+                groupValue: _userType,
+                onChanged: (UserType? value) {
+                  if (value != null) {
+                    setState(() {
+                      _userType = value;
+                    });
+                  }
+                },
+              ),
+            ),
+            ElevatedButton(
+              child: const Text('Next'),
+              onPressed: () {
+                setState(() {
+                  switch (_userType) {
+                    case UserType.customer:
+                      pageIndex = 1;
+                      break;
+                    case UserType.vendor:
+                      pageIndex = 2;
+                      break;
+                  }
+                });
+              },
+            ),
+          ],
+        )),
+        CustomerSignUp(),
+        VendorSignUp(),
+      ]),
+    );
   }
 }
