@@ -100,7 +100,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
         LikesPage(
           likes: const [0, 2],
         ),
-        Setting(),
+        Setting(() => {
+              setState(() {
+                pageIndex = 0;
+              }),
+            }),
       ],
     );
   }
