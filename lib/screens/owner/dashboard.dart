@@ -1,3 +1,4 @@
+import 'package:combat_food/screens/owner/new_post.dart';
 import 'package:combat_food/screens/owner/order_history.dart';
 import 'package:combat_food/screens/owner/posted_items.dart';
 import 'package:combat_food/shared/bottom-nav.dart';
@@ -63,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -87,11 +88,19 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              const Expanded(
+              Expanded(
                 flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.all(5),
-                  child: DashboardBottom(),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NewPost()),
+                      );
+                    },
+                    child: const DashboardBottom(),
+                  ),
                 ),
               ),
             ],
