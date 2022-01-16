@@ -1,4 +1,5 @@
-import 'package:combat_food/data/explore_json.dart';
+import 'package:combat_food/services/api.dart';
+import 'package:combat_food/shared/details.dart';
 import 'package:combat_food/shared/list_item.dart';
 import 'package:flutter/material.dart';
 import 'item-details.dart';
@@ -16,38 +17,80 @@ class _OrderHistoryState extends State<OrderHistory> {
   @override
   void initState() {
     super.initState();
-
-    orderList = [0, 1, 2, 3, 4];
+    orderList = [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Order History',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+        appBar: AppBar(
+          title: const Text(
+            'Order History',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return ListItem(
-            index: index,
-            itemList: explore_json,
-            buttonText: 'Details',
-            buttonOnPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ItemDetails(data: explore_json[index])),
+        body: Container(
+            child: FutureBuilder<List<Map<String, String>>>(
+          future: getOrderHistory(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Column(
+                  children: const [
+                    Text("Loading..."),
+                    CircularProgressIndicator(),
+                  ],
+                ),
               );
-            },
-          );
-        },
-        itemCount: orderList.length,
-      ),
-    );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            }
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return ListItem(
+                    data: snapshot.data![index],
+                    buttonText: 'Details',
+                    buttonOnPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ItemDetails(
+                                  data: snapshot.data![index],
+                                )),
+                      );
+                    },
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ))
+        // body: ListView.builder(
+        //   itemBuilder: (context, index) {
+        //     return ListItem(
+        //       index: index,
+        //       itemList: orderList,
+        //       buttonText: 'Details',
+        //       buttonOnPressed: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(
+        //               builder: (context) => ItemDetails(data: orderList[index])),
+        //         );
+        //       },
+        //     );
+        // },
+        // itemCount: orderList.length,
+        );
   }
 }

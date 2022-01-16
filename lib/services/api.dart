@@ -28,9 +28,19 @@ Future<http.Response> getReq(String url) async {
   );
 }
 
-Future<String> getImage(String uri) async {
-  final storage = firebase_storage.FirebaseStorage.instance;
+Future<String> getImageFromFirestore(String uri) async {
   return await firebase_storage.FirebaseStorage.instance
       .ref(uri)
       .getDownloadURL();
+}
+
+Future<List<Map<String, String>>> getOrderHistory() async {
+  String url = 'https://combat-food.herokuapp.com/api/orders';
+  http.Response response = await getReq(url);
+  Map<String, dynamic> data = jsonDecode(response.body);
+  Map<String, String> orderHistory = Map<String, String>();
+  data['orders'].forEach((order) {
+    orderHistory[order['id']] = order['status'];
+  });
+  return [];
 }

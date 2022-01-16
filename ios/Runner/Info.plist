@@ -4,8 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please enable camera access.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Please enable Camera to upload a Photo.</string>
+	<string>Please enable photo library access.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Combat Food</string>
 	<key>CFBundleExecutable</key>

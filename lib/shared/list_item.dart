@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({
-    required this.index,
-    required this.itemList,
+    required this.data,
     required this.buttonText,
     required this.buttonOnPressed,
   });
 
-  final int index;
-  final List<dynamic> itemList;
+  final dynamic data;
   final String buttonText;
   final VoidCallback buttonOnPressed;
 
@@ -18,10 +16,10 @@ class ListItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: AssetImage(itemList[index]['img']),
+          backgroundImage: AssetImage(data['img']),
         ),
-        title: Text(itemList[index]['product_name']),
-        subtitle: Text(itemList[index]['restaurant_name']),
+        title: Text(data['product_name']),
+        subtitle: Text(data['restaurant_name']),
         trailing: Container(
           width: 80,
           height: 20,

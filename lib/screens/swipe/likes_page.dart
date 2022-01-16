@@ -18,8 +18,7 @@ class _LikesPageState extends State<LikesPage> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return ListItem(
-          index: index,
-          itemList: explore_json,
+          data: explore_json[index],
           buttonText: 'Confirm',
           buttonOnPressed: () {
             Navigator.push(

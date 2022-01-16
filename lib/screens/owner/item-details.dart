@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ItemDetails extends StatefulWidget {
   const ItemDetails({Key? key, required this.data}) : super(key: key);
-  final Map<String, dynamic> data;
+  final Map<String, String> data;
 
   @override
   _ItemDetailsState createState() => _ItemDetailsState();

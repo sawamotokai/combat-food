@@ -33,8 +33,7 @@ class _PostedItemsState extends State<PostedItems> {
       body: ListView.builder(
         itemBuilder: (context, index) {
           return ListItem(
-            index: index,
-            itemList: explore_json,
+            data: explore_json[index],
             buttonText: 'Delete',
             buttonOnPressed: () {
               showModalBottomSheet<void>(
