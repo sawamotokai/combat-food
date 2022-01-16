@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:combat_food/services/dio_api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
@@ -64,7 +67,7 @@ class _NewPostState extends State<NewPost> {
 
   bool validate() {
     print("$_image $itemName $itemPrice $expiredAt $_itemType $foodType");
-    return _image == null &&
+    return _image != null &&
         itemName != '' &&
         itemName != null &&
         itemPrice != '' &&
@@ -293,8 +296,24 @@ class _NewPostState extends State<NewPost> {
                   ),
                 ),
                 onTap: isValid
-                    ? () {
+                    ? () async {
                         print('new post');
+                        dynamic body = {
+                          'productInfo': {
+                            'name': itemName,
+                            'expiredAt': expiredAt,
+                            'foodType': foodType,
+                            'price': itemPrice,
+                            'itemType': _itemType,
+                          },
+                          'photo': await await MultipartFile.fromFile(
+                            _image!.path,
+                            filename: _image!.path,
+                          )
+                        };
+                        String url =
+                            '${dotenv.env["BASE_URL"]}/restaurant/products';
+                        dynamic response = await postReq(url, body);
                       }
                     : null,
               )
