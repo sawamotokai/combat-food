@@ -45,6 +45,7 @@ dependencies:
   flutter_svg: ^1.0.1
   flutter_custom_clippers: ^2.0.0
   modal_progress_hud_nsn: ^0.1.0-nullsafety-0
+  image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:
