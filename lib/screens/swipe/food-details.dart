@@ -1,25 +1,26 @@
-import 'package:combat_food/shared/detail_body.dart';
+import 'package:combat_food/shared/details.dart';
 import 'package:flutter/material.dart';
 
 import 'checkedout_page.dart';
 
-class ProductDetail extends StatefulWidget {
-  const ProductDetail({Key? key}) : super(key: key);
+class FoodDetails extends StatefulWidget {
+  const FoodDetails({Key? key}) : super(key: key);
 
   @override
-  _ProductDetailState createState() => _ProductDetailState();
+  _FoodDetailsState createState() => _FoodDetailsState();
 }
 
-class _ProductDetailState extends State<ProductDetail> {
+class _FoodDetailsState extends State<FoodDetails> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    List<Widget> data = [];
 
     return Scaffold(
       appBar: AppBar(),
-      body: DetailBody(
-        size: size,
-      ),
+      body: Details(
+          imageUrl:
+              'https://images.unsplash.com/photo-1587410131477-f01b22c59e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGFsbCUyMHRvd2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+          data: data),
       bottomSheet: const CheckoutBottom(),
     );
   }

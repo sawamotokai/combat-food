@@ -1,5 +1,5 @@
 import 'package:combat_food/data/explore_json.dart';
-import 'package:combat_food/screens/swipe/product_detail.dart';
+import 'package:combat_food/screens/swipe/food-details.dart';
 import 'package:combat_food/shared/list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +24,7 @@ class _LikesPageState extends State<LikesPage> {
           buttonOnPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProductDetail()),
+              MaterialPageRoute(builder: (context) => FoodDetails()),
             );
           },
         );

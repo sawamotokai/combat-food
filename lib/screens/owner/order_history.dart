@@ -1,7 +1,7 @@
 import 'package:combat_food/data/explore_json.dart';
 import 'package:combat_food/shared/list_item.dart';
 import 'package:flutter/material.dart';
-import 'product_detail.dart';
+import 'item-details.dart';
 
 class OrderHistory extends StatefulWidget {
   const OrderHistory({Key? key}) : super(key: key);
@@ -36,11 +36,12 @@ class _OrderHistoryState extends State<OrderHistory> {
           return ListItem(
             index: index,
             itemList: explore_json,
-            buttonText: 'Detail',
+            buttonText: 'Details',
             buttonOnPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProductDetail()),
+                MaterialPageRoute(
+                    builder: (context) => ItemDetails(data: explore_json[index])),
               );
             },
           );
