@@ -1,11 +1,14 @@
 import 'package:combat_food/data/explore_json.dart';
+import 'package:combat_food/services/api.dart';
 import 'package:combat_food/shared/bottom_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:http/http.dart';
 import 'package:line_icons/line_icons.dart';
 
-typedef IntCallback = void Function(int id);
+typedef StringCallback = void Function(String id);
 
 enum VisibleState {
   neutral,
@@ -14,17 +17,21 @@ enum VisibleState {
 }
 
 class ExplorePage extends StatefulWidget {
-  ExplorePage({required this.goToLikes, required this.addLikes});
+  ExplorePage({
+    required this.goToLikes,
+    required this.addLikes,
+    required this.requestBody,
+  });
 
   final VoidCallback goToLikes;
-  final IntCallback addLikes;
+  final StringCallback addLikes;
+  final Map<String, String> requestBody;
 
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List itemsTemp = [];
   int itemLength = 0;
 
   CardController? controller;
@@ -34,15 +41,24 @@ class _ExplorePageState extends State<ExplorePage> {
 
   List<VisibleState> cardStates = [];
 
-  @override
-  void initState() {
-    super.initState();
+  dynamic exploreItems;
+
+  void getExploreItems() async {
+    Response repsonse =
+        await postReq('${dotenv.env["BASE_URL"]}/products', widget.requestBody);
+
     setState(() {
-      itemsTemp = explore_json;
+      exploreItems = repsonse.body;
       itemLength = explore_json.length;
       stackIndex = 0;
       cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getExploreItems();
   }
 
   @override
@@ -61,6 +77,9 @@ class _ExplorePageState extends State<ExplorePage> {
             swipeCompleteCallback:
                 (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
+              if (orientation == CardSwipeOrientation.RIGHT) {
+                widget.addLikes(exploreItems[index]['productId']);
+              }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
                 setState(() {
@@ -104,7 +123,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       height: size.height,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(itemsTemp[index]['img']),
+                          image: AssetImage(exploreItems[index]['imgUrl']),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -144,7 +163,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              itemsTemp[index]['product_name'],
+                                              exploreItems[index]['name'],
                                               style: const TextStyle(
                                                 fontSize: 26,
                                                 color: Colors.white,
@@ -166,8 +185,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              itemsTemp[index]
-                                                  ['restaurant_name'],
+                                              exploreItems[index]
+                                                  ['restaurantName'],
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.white,
@@ -205,8 +224,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   top: 3,
                                                 ),
                                                 child: Text(
-                                                  itemsTemp[index]
-                                                      ['expired_at'],
+                                                  exploreItems[index]
+                                                      ['expiredAt'],
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,
@@ -419,6 +438,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.like;
                 });
+                widget.addLikes(exploreItems[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/like.svg",
