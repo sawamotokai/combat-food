@@ -11,3 +11,9 @@ export const uploadImageFiles = (admin:any, files:PostedFiles[], restaurantName:
     });
     return promises;
 };
+
+
+export const registerProducts = (db:FirebaseFirestore.Firestore, productInfo:PostedProduct, productId:string)=>{
+    return db.collection("products").doc(productId).create({...productInfo});
+    // return db.collection("products").doc(productId).update({...productInfo});
+};

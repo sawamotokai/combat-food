@@ -6,7 +6,10 @@ https://us-central1-combatfoodapi.cloudfunctions.net/api/
 /api
     /restaurant
         /signup
-        /signin    
+        /signin  
+        /products
+        /products/:product_id
+        
     /user
         /signup
         /signin
