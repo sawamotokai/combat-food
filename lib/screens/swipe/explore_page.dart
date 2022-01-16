@@ -18,12 +18,14 @@ enum VisibleState {
 
 class ExplorePage extends StatefulWidget {
   ExplorePage({
+    required this.data,
     required this.goToLikes,
     required this.addLikes,
     required this.requestBody,
     required this.addDisLikes,
   });
 
+  final Map<String, dynamic> data;
   final VoidCallback goToLikes;
   final StringCallback addLikes;
   final StringCallback addDisLikes;
@@ -45,24 +47,6 @@ class _ExplorePageState extends State<ExplorePage> {
 
   dynamic exploreItems;
 
-  void getExploreItems() async {
-    try {
-      Response response = await postReq(
-          '${dotenv.env["BASE_URL"]}/products', widget.requestBody);
-
-      print(response.body);
-
-      setState(() {
-        exploreItems = response.body;
-        itemLength = explore_json.length;
-        stackIndex = 0;
-        cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -71,6 +55,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.data['images']);
     return getBody();
   }
 
