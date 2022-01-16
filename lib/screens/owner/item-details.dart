@@ -62,25 +62,16 @@ class ItemDetails extends StatelessWidget {
                   ],
                 ),
               );
-            }
-            if (snapshot.hasError) {
+            } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.hasData) {
-              // Details(data: wid, imageUrl: snapshot.data);
-              print(snapshot.data!);
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 50),
-                child: wid,
+            } else if (snapshot.hasData) {
+              return Details(
+                data: wid,
+                imageUrl: snapshot.data! as String,
               );
             }
+            return Text("No Error but no data");
           },
-        )
-        // body: Details(
-        //   imageUrl:
-        //       'https://images.unsplash.com/photo-1587410131477-f01b22c59e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGFsbCUyMHRvd2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
-        //   data: wid,
-        // ),
-        );
+        ));
   }
 }
