@@ -47,6 +47,9 @@ dependencies:
   modal_progress_hud_nsn: ^0.1.0-nullsafety-0
   image_picker: ^0.8.4+4
   http: ^0.13.4
+  intl: ^0.17.0
+  datetime_picker_formfield: ^2.0.0
+  select_form_field: ^2.2.0
   flutter_dotenv: ^5.0.2
   firebase_storage: ^10.0.6
 

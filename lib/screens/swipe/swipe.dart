@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:combat_food/screens/swipe/setting_screen/setting.dart';
 import 'package:combat_food/shared/app_header.dart';
 import 'package:flutter/material.dart';
 import 'package:combat_food/shared/bottom-nav.dart';
@@ -80,7 +82,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
         LikesPage(
           likes: [0, 1, 2, 3, 4],
         ),
-        Scaffold(),
+        Setting(),
       ],
     );
   }

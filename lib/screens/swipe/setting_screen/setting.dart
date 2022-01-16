@@ -1,0 +1,37 @@
+import 'package:combat_food/screens/swipe/setting_screen/apply/apply_button_field.dart';
+import 'package:combat_food/screens/swipe/setting_screen/food_type/food_type_field.dart';
+import 'package:combat_food/screens/swipe/setting_screen/price/price_field.dart';
+import 'package:flutter/material.dart';
+import 'distance/distance_field.dart';
+
+class Setting extends StatefulWidget {
+  const Setting({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SettingScreen();
+}
+
+class _SettingScreen extends State<Setting> {
+  void tempFunction() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 120),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // shrinkWrap: true,
+          children: [
+          PriceField(),
+          DistanceField(),
+          FoodTypeField(),
+          ApplyButtonField()
+        ]),
+      ),
+    );
+  }
+}
