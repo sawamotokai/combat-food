@@ -10,22 +10,33 @@ class BottomNavBar extends StatelessWidget {
       child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.bolt, size: 20), label: 'About'),
+              icon: Icon(
+                FontAwesomeIcons.bolt,
+                size: 25,
+                color: Colors.black,
+              ),
+              label: 'About',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.userCircle, size: 20),
-                label: 'Profile'),
+              icon: Icon(
+                FontAwesomeIcons.userCircle,
+                size: 25,
+                color: Colors.black,
+              ),
+              label: 'Profile',
+            ),
           ],
-          fixedColor: Colors.deepPurple[200],
+          fixedColor: Colors.black,
           backgroundColor: Colors.orangeAccent,
           onTap: (int index) {
             switch (index) {
               case 0:
-                break;
-              case 1:
                 Navigator.of(context).pushNamed('/about');
                 break;
-              case 2:
+              case 1:
                 Navigator.of(context).pushNamed('/profile');
+                break;
+              case 2:
                 break;
             }
           }),

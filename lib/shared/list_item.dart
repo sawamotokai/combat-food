@@ -5,13 +5,13 @@ class ListItem extends StatelessWidget {
     required this.index,
     required this.itemList,
     required this.buttonText,
-    required this.navigatedPage,
+    required this.buttonOnPressed,
   });
 
   final int index;
   final List<dynamic> itemList;
   final String buttonText;
-  final Widget navigatedPage;
+  final VoidCallback buttonOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +30,7 @@ class ListItem extends StatelessWidget {
             color: Colors.grey.shade300,
           ),
           child: GestureDetector(
-            onTap: () {
-              // TODO: goto
-              print('Confirm!');
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => navigatedPage),
-              );
-            },
+            onTap: buttonOnPressed,
             child: Text(
               buttonText,
               textAlign: TextAlign.center,

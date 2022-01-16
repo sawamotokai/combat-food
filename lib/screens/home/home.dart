@@ -2,6 +2,7 @@ import 'package:combat_food/screens/sign-up/sign-up.dart';
 import 'package:flutter/material.dart';
 import 'package:combat_food/services/auth.dart';
 import 'package:combat_food/screens/swipe/swipe.dart';
+import 'package:combat_food/screens/owner/dashboard.dart';
 import 'package:combat_food/screens/sign-up/sign-up.dart';
 import 'package:combat_food/screens/login/login.dart';
 
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             return const Text('error');
           }
           if (snapshot.hasData) {
-            return SwipeScreen();
+            return Dashboard();
           }
           return const LoginScreen();
         });

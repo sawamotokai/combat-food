@@ -1,3 +1,4 @@
+import 'package:combat_food/shared/detail_body.dart';
 import 'package:flutter/material.dart';
 
 import 'checkedout_page.dart';
@@ -20,31 +21,6 @@ class _ProductDetailState extends State<ProductDetail> {
         size: size,
       ),
       bottomSheet: const CheckoutBottom(),
-    );
-  }
-}
-
-class DetailBody extends StatelessWidget {
-  const DetailBody({
-    Key? key,
-    required this.size,
-  }) : super(key: key);
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size.width,
-      color: Colors.lightGreenAccent,
-      child: const Center(
-        child: Text(
-          'Detail',
-          style: TextStyle(
-            fontSize: 50,
-          ),
-        ),
-      ),
     );
   }
 }
