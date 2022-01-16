@@ -1,11 +1,14 @@
 import 'package:combat_food/data/explore_json.dart';
+import 'package:combat_food/services/api.dart';
 import 'package:combat_food/shared/bottom_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:http/http.dart';
 import 'package:line_icons/line_icons.dart';
 
-typedef IntCallback = void Function(int id);
+typedef StringCallback = void Function(String id);
 
 enum VisibleState {
   neutral,
@@ -14,17 +17,25 @@ enum VisibleState {
 }
 
 class ExplorePage extends StatefulWidget {
-  ExplorePage({required this.goToLikes, required this.addLikes});
+  ExplorePage({
+    required this.data,
+    required this.goToLikes,
+    required this.addLikes,
+    required this.requestBody,
+    required this.addDisLikes,
+  });
 
+  final Map<String, dynamic> data;
   final VoidCallback goToLikes;
-  final IntCallback addLikes;
+  final StringCallback addLikes;
+  final StringCallback addDisLikes;
+  final Map<String, String> requestBody;
 
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List itemsTemp = [];
   int itemLength = 0;
 
   CardController? controller;
@@ -34,24 +45,31 @@ class _ExplorePageState extends State<ExplorePage> {
 
   List<VisibleState> cardStates = [];
 
+  dynamic exploreItems;
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      itemsTemp = explore_json;
-      itemLength = explore_json.length;
-      stackIndex = 0;
-      cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
-    });
+    getExploreItems();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.data['images']);
     return getBody();
   }
 
   Widget getBody() {
     Size size = MediaQuery.of(context).size;
+
+    List urls = List.generate(exploreItems.length, (index) async {
+      try {
+        return await getImageFromFirestore(exploreItems[index]['imgUrl']);
+      } catch (e) {
+        print(e);
+      }
+    });
+
     return Padding(
       padding: EdgeInsets.only(bottom: 120),
       child: Container(
@@ -61,6 +79,12 @@ class _ExplorePageState extends State<ExplorePage> {
             swipeCompleteCallback:
                 (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
+              if (orientation == CardSwipeOrientation.RIGHT) {
+                widget.addLikes(exploreItems[index]['productId']);
+              }
+              if (orientation == CardSwipeOrientation.LEFT) {
+                widget.addDisLikes(exploreItems[index]['productId']);
+              }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
                 setState(() {
@@ -104,7 +128,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       height: size.height,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(itemsTemp[index]['img']),
+                          image: NetworkImage(urls[index]),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -144,7 +168,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              itemsTemp[index]['product_name'],
+                                              exploreItems[index]['name'],
                                               style: const TextStyle(
                                                 fontSize: 26,
                                                 color: Colors.white,
@@ -166,8 +190,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                               width: 10,
                                             ),
                                             Text(
-                                              itemsTemp[index]
-                                                  ['restaurant_name'],
+                                              exploreItems[index]
+                                                  ['restaurantName'],
                                               style: const TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.white,
@@ -205,8 +229,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   top: 3,
                                                 ),
                                                 child: Text(
-                                                  itemsTemp[index]
-                                                      ['expired_at'],
+                                                  exploreItems[index]
+                                                      ['expiredAt'],
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,
@@ -406,6 +430,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.dislike;
                 });
+                widget.addDisLikes(exploreItems[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/dislike.svg",
@@ -419,6 +444,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.like;
                 });
+                widget.addLikes(exploreItems[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/like.svg",

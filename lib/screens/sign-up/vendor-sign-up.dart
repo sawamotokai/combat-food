@@ -225,6 +225,7 @@ class _VendorSignUp extends State<VendorSignUp> {
                         "city": _city,
                         "province": _province,
                         "postalCode": _postalCode,
+                        "userType": "vendor",
                       };
                       AuthService()
                           .emailPasswordSignUp(_email, _password, data);
