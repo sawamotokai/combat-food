@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:combat_food/services/auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 Future<http.Response> postReq(String url, Map<String, String> body) async {
@@ -34,13 +37,11 @@ Future<String> getImageFromFirestore(String uri) async {
       .getDownloadURL();
 }
 
-Future<List<Map<String, String>>> getOrderHistory() async {
-  String url = 'https://combat-food.herokuapp.com/api/orders';
-  http.Response response = await getReq(url);
-  Map<String, dynamic> data = jsonDecode(response.body);
-  Map<String, String> orderHistory = Map<String, String>();
-  data['orders'].forEach((order) {
-    orderHistory[order['id']] = order['status'];
-  });
-  return [];
+Future<List<dynamic>> getOrderHistory() async {
+  var url = '${dotenv.env["BASE_URL"]}/api/restaurant/history';
+  http.Response res = await getReq(url);
+  LinkedHashMap<String, dynamic> data = jsonDecode(res.body);
+  List<dynamic> orders = data['orders']!;
+  print(orders);
+  return orders;
 }

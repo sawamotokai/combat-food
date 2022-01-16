@@ -32,7 +32,7 @@ class _OrderHistoryState extends State<OrderHistory> {
           ),
         ),
         body: Container(
-            child: FutureBuilder<List<Map<String, String>>>(
+            child: FutureBuilder<List<dynamic>>(
           future: getOrderHistory(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,11 +51,15 @@ class _OrderHistoryState extends State<OrderHistory> {
               );
             }
             if (snapshot.hasData) {
+              print(snapshot.data);
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return ListItem(
-                    data: snapshot.data![index],
+                    // data: snapshot.data![index],
+                    imageUrl: snapshot.data![index]['imageUrl'],
+                    title: snapshot.data![index]['name'],
+                    subtitle: snapshot.data![index]['ordered_at'],
                     buttonText: 'Details',
                     buttonOnPressed: () {
                       Navigator.push(

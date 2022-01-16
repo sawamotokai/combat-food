@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:combat_food/data/explore_json.dart';
 import 'package:combat_food/screens/swipe/food-details.dart';
 import 'package:combat_food/shared/list_item.dart';
@@ -18,7 +20,9 @@ class _LikesPageState extends State<LikesPage> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return ListItem(
-          data: explore_json[index],
+          imageUrl: explore_json[index]['img'],
+          title: explore_json[index]['product_name'],
+          subtitle: explore_json[index]['restaurant_name'],
           buttonText: 'Confirm',
           buttonOnPressed: () {
             Navigator.push(
