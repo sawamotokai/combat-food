@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:combat_food/services/dio_api.dart';
+import 'package:combat_food/shared/food_type_enum.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,20 +14,7 @@ import 'package:select_form_field/select_form_field.dart';
 
 enum ItemType { ingredient, dish }
 
-final List<Map<String, dynamic>> _items = [
-  {
-    'value': 'jp',
-    'label': 'Japanese',
-  },
-  {
-    'value': 'italy',
-    'label': 'Italian',
-  },
-  {
-    'value': 'france',
-    'label': 'France',
-  },
-];
+final List<Map<String, dynamic>> _items = FoodTypesMap;
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
