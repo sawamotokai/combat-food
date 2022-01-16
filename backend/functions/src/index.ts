@@ -48,6 +48,7 @@ combatFoodApp.get("/products", async (request:any, response) => {
     // TODO: return 10 images?
     try {
         // const userId = request.user.user_id;
+        console.log("test");
         response.status(200).send();
     } catch (error) {
         console.log(error);
@@ -56,10 +57,31 @@ combatFoodApp.get("/products", async (request:any, response) => {
 });
 
 
-combatFoodApp.get("/products:product_id", async (request, response) => {
-    // reutrn detail of a product
+combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => {
+    // lock the item for XX min
     try {
-        // const productId = request.params.product_id;
+        const productId = request.params.product_id;
+        const product = (await db.collection("products").doc(productId).get()).data();
+
+        if (product?.lockedBy == undefined) {
+            response.status(200).send();
+            return;
+        } else if (
+            product?.lockedBy != request.user.user_id &&
+            product.lockedUntil > admin.firestore.Timestamp.fromDate(new Date())) {
+            response.status(200).send("This product is locked by someone.");
+            return;
+        } else {
+            // get lock
+            const nowDate = new Date();
+            nowDate.setSeconds(nowDate.getSeconds()+120);
+            const lockedUntil = admin.firestore.Timestamp.fromDate(nowDate);
+            await db.collection("products").doc(productId).update({
+                "lockedBy": request.user.user_id,
+                "lockedUntil": lockedUntil,
+            });
+            response.status(200).send("This product is locked for 2minutes.");
+        }
         response.status(200).send();
     } catch (error) {
         console.log(error);
