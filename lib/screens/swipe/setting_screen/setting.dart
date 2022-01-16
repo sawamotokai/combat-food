@@ -1,5 +1,6 @@
 import 'package:combat_food/screens/swipe/setting_screen/apply/apply_button_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/food_type/food_type_field.dart';
+import 'package:combat_food/screens/swipe/setting_screen/logout/logout_bottun_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/price/price_field.dart';
 import 'package:flutter/material.dart';
 import 'distance/distance_field.dart';
@@ -22,15 +23,24 @@ class _SettingScreen extends State<Setting> {
     return Padding(
       padding: EdgeInsets.only(bottom: 120),
       child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // shrinkWrap: true,
-          children: [
-          PriceField(),
-          DistanceField(),
-          FoodTypeField(),
-          ApplyButtonField()
-        ]),
+        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // shrinkWrap: true,
+            children: [
+              LogoutButtonField(),
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.orange[50],
+                    ),
+                    child: Column(children: [
+                      PriceField(),
+                      DistanceField(),
+                      FoodTypeField(),
+                    ])),
+              ),
+              ApplyButtonField(),
+            ]),
       ),
     );
   }

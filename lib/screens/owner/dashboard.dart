@@ -4,6 +4,12 @@ import 'package:combat_food/screens/owner/posted_items.dart';
 import 'package:combat_food/shared/bottom-nav.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:combat_food/services/auth.dart';
+
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+CollectionReference restaurant =
+    FirebaseFirestore.instance.collection('restaurants');
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -13,6 +19,11 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,10 +40,10 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: DashboardTop(),
                 ),
               ),
@@ -167,76 +178,106 @@ class DashboardBottom extends StatelessWidget {
   }
 }
 
-class DashboardTop extends StatelessWidget {
-  const DashboardTop({
-    Key? key,
-  }) : super(key: key);
+class DashboardTop extends StatefulWidget {
+  @override
+  _DashboardTopState createState() => _DashboardTopState();
+}
+
+class _DashboardTopState extends State<DashboardTop> {
+  Stream<DocumentSnapshot<Object?>>? _restaurantsStream;
+
+  void getRestaurantStream() {
+    String userId = AuthService().getUserId();
+    _restaurantsStream = restaurant.doc(userId).snapshots();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRestaurantStream();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    'total purchased',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w400,
-                    ),
+    return StreamBuilder<DocumentSnapshot<Object?>>(
+      stream: _restaurantsStream,
+      builder: (BuildContext context,
+          AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        dynamic body = snapshot.data!.data();
+        int historyOrderSize = body['history'].length as int;
+        return Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'total purchased',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Text(
+                        '$historyOrderSize',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '30',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 20,
-            ),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.blue,
                 ),
-                color: Colors.blue,
               ),
-              child: const Icon(
-                LineIcons.signal,
-                size: 50,
-                color: Colors.greenAccent,
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 20,
+                ),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.blue,
+                    ),
+                    color: Colors.blue,
+                  ),
+                  child: const Icon(
+                    LineIcons.signal,
+                    size: 50,
+                    color: Colors.greenAccent,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 15,
-            offset: Offset(0, 0.75), // changes position of shadow
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 15,
+                offset: Offset(0, 0.75), // changes position of shadow
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
