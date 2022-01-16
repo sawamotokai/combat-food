@@ -1,7 +1,9 @@
+import 'package:combat_food/screens/sign-up/sign-up.dart';
 import 'package:flutter/material.dart';
 import 'package:combat_food/services/auth.dart';
-import 'package:combat_food/screens/login/login.dart';
 import 'package:combat_food/screens/swipe/swipe.dart';
+import 'package:combat_food/screens/sign-up/sign-up.dart';
+import 'package:combat_food/screens/login/login.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
