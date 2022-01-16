@@ -51,6 +51,7 @@ dependencies:
   datetime_picker_formfield: ^2.0.0
   select_form_field: ^2.2.0
   flutter_dotenv: ^5.0.2
+  dio: ^4.0.4
 
 dev_dependencies:
   flutter_test:
