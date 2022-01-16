@@ -8,7 +8,7 @@ import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:http/http.dart';
 import 'package:line_icons/line_icons.dart';
 
-typedef IntCallback = void Function(int id);
+typedef StringCallback = void Function(String id);
 
 enum VisibleState {
   neutral,
@@ -24,7 +24,7 @@ class ExplorePage extends StatefulWidget {
   });
 
   final VoidCallback goToLikes;
-  final IntCallback addLikes;
+  final StringCallback addLikes;
   final Map<String, String> requestBody;
 
   @override
@@ -77,6 +77,9 @@ class _ExplorePageState extends State<ExplorePage> {
             swipeCompleteCallback:
                 (CardSwipeOrientation orientation, int index) {
               /// Get orientation & index of swiped card!
+              if (orientation == CardSwipeOrientation.RIGHT) {
+                widget.addLikes(exploreItems[index]['productId']);
+              }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
                 setState(() {
@@ -435,6 +438,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.like;
                 });
+                widget.addLikes(exploreItems[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/like.svg",
