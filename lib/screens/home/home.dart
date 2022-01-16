@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             // return Dashboard();
             return SwipeScreen();
           }
-            return SwipeScreen();
+          return SwipeScreen();
           // return const LoginScreen();
         });
   }

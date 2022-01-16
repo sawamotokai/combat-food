@@ -44,7 +44,7 @@ class _NewPostState extends State<NewPost> {
   String itemPrice = '0.00';
   DateTime? expiredAt;
   ItemType _itemType = ItemType.ingredient;
-  String? foodType;
+  String foodType = _items[0]['value'];
 
   final picker = ImagePicker();
 
@@ -63,9 +63,11 @@ class _NewPostState extends State<NewPost> {
   }
 
   bool validate() {
-    return _image != null &&
+    print("$_image $itemName $itemPrice $expiredAt $_itemType $foodType");
+    return _image == null &&
+        itemName != '' &&
         itemName != null &&
-        itemPrice != null &&
+        itemPrice != '' &&
         expiredAt != null &&
         foodType != null;
   }
@@ -73,6 +75,7 @@ class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
     bool isValid = validate();
+    print(isValid);
 
     return Scaffold(
       appBar: AppBar(
@@ -229,7 +232,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     SelectFormField(
                       type: SelectFormFieldType.dropdown, // or can be dialog
-                      initialValue: 'jp',
+                      initialValue: foodType,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.format_shapes,
@@ -354,8 +357,11 @@ class BasicDateTimeField extends StatelessWidget {
                   initialTime:
                       TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                 );
-                return DateTimeField.combine(date, time);
+                DateTime result = DateTimeField.combine(date, time);
+                setState(result);
+                return result;
               } else {
+                setState(currentValue!);
                 return currentValue;
               }
             },
