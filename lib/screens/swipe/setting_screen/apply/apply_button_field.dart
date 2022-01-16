@@ -10,7 +10,7 @@ class ApplyButtonField extends StatelessWidget {
       child: Container(
         child: ApplyButton(onPressed),
         decoration: BoxDecoration(
-          color: Colors.white70,
+          // color: Colors.white70,
           borderRadius: BorderRadius.circular(15),
           boxShadow: const [
             BoxShadow(
