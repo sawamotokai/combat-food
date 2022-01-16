@@ -1,5 +1,6 @@
 import 'package:combat_food/screens/about/about.dart';
 import 'package:combat_food/screens/login/login.dart';
+import 'package:combat_food/screens/preference/pref.dart';
 import 'package:combat_food/screens/sign-up/sign-up.dart';
 import 'package:combat_food/screens/profile/profile.dart';
 import 'package:combat_food/screens/home/home.dart';
@@ -11,5 +12,5 @@ var appRoutes = {
   '/sign-up': (context) => const SignUpScreen(),
   '/profile': (context) => const ProfileScreen(),
   '/about': (context) => const AboutScreen(),
-  '/swipe': (context) => SwipeScreen()
+  '/swipe': (context) => SwipeScreen(),
 };
