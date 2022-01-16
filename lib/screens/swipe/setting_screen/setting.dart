@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'distance/distance_field.dart';
 
 class Setting extends StatefulWidget {
-  const Setting({Key? key}) : super(key: key);
+  Function _onPressed = () {};
+  Setting(Function onPressed, {Key? key}) : super(key: key) {
+    _onPressed = onPressed;
+  }
 
   @override
   State<StatefulWidget> createState() => _SettingScreen();
@@ -24,7 +27,7 @@ class _SettingScreen extends State<Setting> {
       padding: EdgeInsets.only(bottom: 120),
       child: SingleChildScrollView(
         child: ListView(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             shrinkWrap: true,
             children: [
               LogoutButtonField(),
@@ -40,7 +43,7 @@ class _SettingScreen extends State<Setting> {
                       FoodTypeField(),
                     ])),
               ),
-              ApplyButtonField(),
+              ApplyButtonField(widget._onPressed),
             ]),
       ),
     );
