@@ -32,9 +32,12 @@ Future<http.Response> getReq(String url) async {
 }
 
 Future<String> getImageFromFirestore(String uri) async {
-  return await firebase_storage.FirebaseStorage.instance
-      .ref(uri)
-      .getDownloadURL();
+  print("STUB! TODO:");
+  uri = "adminRestaurant/ZZZZ1642339435322/0.png";
+  String url =
+      await firebase_storage.FirebaseStorage.instance.ref(uri).getDownloadURL();
+  print(url);
+  return url;
 }
 
 Future<List<dynamic>> getOrderHistory() async {
@@ -42,6 +45,5 @@ Future<List<dynamic>> getOrderHistory() async {
   http.Response res = await getReq(url);
   LinkedHashMap<String, dynamic> data = jsonDecode(res.body);
   List<dynamic> orders = data['orders']!;
-  print(orders);
   return orders;
 }

@@ -12,12 +12,9 @@ class OrderHistory extends StatefulWidget {
 }
 
 class _OrderHistoryState extends State<OrderHistory> {
-  List<int> orderList = [];
-
   @override
   void initState() {
     super.initState();
-    orderList = [];
   }
 
   @override
