@@ -1,4 +1,5 @@
 
+import {PostedFiles} from "./types";
 
 export const uploadImageFiles = (admin:any, files:PostedFiles[], restaurantName:string, productId:string) =>{
     const promises:Promise<any>[] = [];
