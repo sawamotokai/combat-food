@@ -11,16 +11,94 @@ class VendorSignUp extends StatefulWidget {
 class _VendorSignUp extends State<VendorSignUp> {
   String _email = "";
   String _phoneNumber = "";
-  String _firstName = "";
-  String _lastName = "";
+  String _vendorName = "";
+  String _postalCode = "";
+  String _streetAddress = "";
+  String _city = "";
+  String _province = "";
   String _password = "";
   String _confirmationPassword = "";
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  Widget _buildPostalCode() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Postal Code*'),
+      validator: (String? value) =>
+          value != null && value.isEmpty ? 'Postal Code is Required.' : null,
+      onSaved: (String? postalCode) {
+        if (postalCode != null) {
+          setState(() {
+            _postalCode = postalCode;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildStreetAddress() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Street Address*'),
+      validator: (String? value) =>
+          value != null && value.isEmpty ? 'Street Address is Required.' : null,
+      onSaved: (String? streetAddress) {
+        if (streetAddress != null) {
+          setState(() {
+            _streetAddress = streetAddress;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildCity() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'City*'),
+      validator: (String? value) =>
+          value != null && value.isEmpty ? 'City is Required.' : null,
+      onSaved: (String? city) {
+        if (city != null) {
+          setState(() {
+            _city = city;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildProvince() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Province*'),
+      validator: (String? value) =>
+          value != null && value.isEmpty ? 'Province is Required.' : null,
+      onSaved: (String? province) {
+        if (province != null) {
+          setState(() {
+            _province = province;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildVendorName() {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Vendor Name*'),
+      validator: (String? value) =>
+          value != null && value.isEmpty ? 'Vendor Name is Required.' : null,
+      onSaved: (String? vendorName) {
+        if (vendorName != null) {
+          setState(() {
+            _vendorName = vendorName;
+          });
+        }
+      },
+    );
+  }
+
   Widget _buildEmail() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Email'),
+      decoration: const InputDecoration(labelText: 'Email*'),
       validator: (String? value) {
         if (value == null) return null;
         if (value.isEmpty) {
@@ -34,14 +112,18 @@ class _VendorSignUp extends State<VendorSignUp> {
         return null;
       },
       onSaved: (String? email) {
-        if (email != null) _email = email;
+        if (email != null) {
+          setState(() {
+            _email = email;
+          });
+        }
       },
     );
   }
 
   Widget _buildPhoneNumber() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Phone number'),
+      decoration: const InputDecoration(labelText: 'Phone number*'),
       keyboardType: TextInputType.phone,
       validator: (String? value) {
         if (value == null) return null;
@@ -51,36 +133,18 @@ class _VendorSignUp extends State<VendorSignUp> {
         return null;
       },
       onSaved: (String? phoneNumber) {
-        if (phoneNumber != null) _phoneNumber = phoneNumber;
-      },
-    );
-  }
-
-  Widget _buildFirstName() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'First Name'),
-      validator: (String? value) =>
-          value != null && value.isEmpty ? 'First Name is Required.' : null,
-      onSaved: (String? firstName) {
-        if (firstName != null) _firstName = firstName;
-      },
-    );
-  }
-
-  Widget _buildLastName() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'Last Name'),
-      validator: (String? value) =>
-          value != null && value.isEmpty ? 'Last Name is Required.' : null,
-      onSaved: (String? lastName) {
-        if (lastName != null) _lastName = lastName;
+        if (phoneNumber != null) {
+          setState(() {
+            _phoneNumber = phoneNumber;
+          });
+        }
       },
     );
   }
 
   Widget _buildPassword() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Password'),
+      decoration: const InputDecoration(labelText: 'Password*'),
       obscureText: true,
       validator: (String? value) {
         if (value == null) return null;
@@ -104,12 +168,10 @@ class _VendorSignUp extends State<VendorSignUp> {
 
   Widget _buildConfirmationPassword() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Password'),
+      decoration: const InputDecoration(labelText: 'Confirm Password*'),
       obscureText: true,
       validator: (String? value) {
         if (value == null) return null;
-        print(value);
-        print(_password);
         if (value != _password) {
           return 'Password does not match.';
         }
@@ -127,26 +189,27 @@ class _VendorSignUp extends State<VendorSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-        backgroundColor: Colors.green[700],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-            margin: const EdgeInsets.all(30),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildEmail(),
-                  _buildPhoneNumber(),
-                  _buildFirstName(),
-                  _buildLastName(),
-                  _buildPassword(),
-                  _buildConfirmationPassword(),
-                  const SizedBox(height: 100),
-                  ElevatedButton.icon(
+    return SingleChildScrollView(
+      child: Container(
+          margin: const EdgeInsets.all(50),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text("Vendor",
+                    style: TextStyle(fontSize: 15, letterSpacing: 1.5)),
+                _buildEmail(),
+                _buildPhoneNumber(),
+                _buildVendorName(),
+                _buildStreetAddress(),
+                _buildCity(),
+                _buildProvince(),
+                _buildPostalCode(),
+                _buildPassword(),
+                _buildConfirmationPassword(),
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: ElevatedButton.icon(
                     icon: const Icon(FontAwesomeIcons.arrowAltCircleUp),
                     label: const Text('Sign Up'),
                     onPressed: () {
@@ -154,13 +217,24 @@ class _VendorSignUp extends State<VendorSignUp> {
                         return;
                       }
                       _formKey.currentState!.save();
-                      AuthService().emailPasswordSignUp(_email, _password);
+                      Map<String, String> data = {
+                        "email": _email,
+                        "phoneNumber": _phoneNumber,
+                        "vendorName": _vendorName,
+                        "streetAddress": _streetAddress,
+                        "city": _city,
+                        "province": _province,
+                        "postalCode": _postalCode,
+                      };
+                      AuthService()
+                          .emailPasswordSignUp(_email, _password, data);
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                   ),
-                ],
-              ),
-            )),
-      ),
+                ),
+              ],
+            ),
+          )),
     );
   }
 }

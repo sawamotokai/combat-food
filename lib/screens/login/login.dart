@@ -11,6 +11,7 @@ class LoginScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Login'),
         ),
+        backgroundColor: Colors.amber[50],
         body: Container(
             padding: const EdgeInsets.all(30),
             child: Column(
@@ -107,6 +108,13 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       key: _formKey,
       child: Column(children: [
+        const Center(
+          child: Text('Login',
+              style: TextStyle(
+                fontSize: 30,
+                letterSpacing: 1.5,
+              )),
+        ),
         _buildEmail(),
         _buildPassword(),
         Padding(
