@@ -24,21 +24,22 @@ class _SettingScreen extends State<Setting> {
       padding: EdgeInsets.only(bottom: 120),
       child: SingleChildScrollView(
         child: ListView(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             shrinkWrap: true,
             children: [
               LogoutButtonField(),
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.orange[50],
-                    ),
-                    child: Column(children: [
-                      PriceField(),
-                      DistanceField(),
-                      FoodTypeField(),
-                    ])),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                  ),
+                  child: Column(children: [
+                    PriceField(),
+                    DistanceField(),
+                    FoodTypeField(),
+                  ]),
+                ),
               ),
               ApplyButtonField(),
             ]),
