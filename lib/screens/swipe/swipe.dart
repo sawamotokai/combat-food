@@ -19,6 +19,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
   bool inProgress = false;
 
+  Map<String, String> productsRequestBody = {
+    'price_low': '2.00',
+    'price_high': '4.00',
+    'food_type': 'Japanese',
+    'item_type': 'Ingredient',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +85,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
           addLikes: (int likes) {
             likeList.add(likes);
           },
+          requestBody: productsRequestBody,
         ),
         LikesPage(
           likes: [0, 1, 2, 3, 4],
