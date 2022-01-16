@@ -1,7 +1,9 @@
+import 'package:combat_food/screens/swipe/setting_screen/apply/apply_button_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/food_type/food_type_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/price/price_field.dart';
 import 'package:flutter/material.dart';
 
+import 'apply/apply_button.dart';
 import 'distance/distance_field.dart';
 import 'food_type/food_type_check_list.dart';
 
@@ -28,6 +30,7 @@ class _SettingScreen extends State<Setting> {
       child: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
+          
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -43,6 +46,9 @@ class _SettingScreen extends State<Setting> {
               // flex: 1,
               child: FoodTypeField(),
             ),
+            Container(
+              child: ApplyButtonField(),
+            )
           ]),
         ),
       ),
