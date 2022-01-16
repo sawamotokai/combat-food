@@ -7,8 +7,6 @@ class FoodTypeField extends StatelessWidget {
     'Chinese',
     'Italian',
     'Fruit',
-    
-    
   ];
   final int size = 4;
 
