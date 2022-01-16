@@ -301,6 +301,7 @@ class _NewPostState extends State<NewPost> {
                         String url =
                             '${dotenv.env["BASE_URL"]}/restaurant/products';
                         dynamic response = await postReq(url, body);
+                        print(response);
                       }
                     : null,
               )

@@ -14,6 +14,11 @@ class AuthService {
     }
   }
 
+  String getUserId() {
+    if (user == null) return "User not logged in";
+    return user!.uid;
+  }
+
   Future<void> emailPasswordSignUp(
       String email, String password, Map<String, String> data) async {
     try {

@@ -2,10 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSCameraUsageDescription</key>
-    <string>Please enable Camera to take a photo.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please enable camera access.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please enable photo library access.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Combat Food</string>
 	<key>CFBundleExecutable</key>
