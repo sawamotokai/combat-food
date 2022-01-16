@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
           }
           if (snapshot.hasData) {
             // return Dashboard();
-            return SwipeScreen();
+            return Dashboard();
           }
           return SwipeScreen();
           // return const LoginScreen();

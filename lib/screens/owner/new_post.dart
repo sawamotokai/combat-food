@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:combat_food/services/dio_api.dart';
+import 'package:combat_food/shared/food_type_enum.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
@@ -10,20 +14,7 @@ import 'package:select_form_field/select_form_field.dart';
 
 enum ItemType { ingredient, dish }
 
-final List<Map<String, dynamic>> _items = [
-  {
-    'value': 'jp',
-    'label': 'Japanese',
-  },
-  {
-    'value': 'italy',
-    'label': 'Italian',
-  },
-  {
-    'value': 'france',
-    'label': 'France',
-  },
-];
+final List<Map<String, dynamic>> _items = FoodTypesMap;
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
@@ -64,7 +55,7 @@ class _NewPostState extends State<NewPost> {
 
   bool validate() {
     print("$_image $itemName $itemPrice $expiredAt $_itemType $foodType");
-    return _image == null &&
+    return _image != null &&
         itemName != '' &&
         itemName != null &&
         itemPrice != '' &&
@@ -293,8 +284,24 @@ class _NewPostState extends State<NewPost> {
                   ),
                 ),
                 onTap: isValid
-                    ? () {
+                    ? () async {
                         print('new post');
+                        dynamic body = {
+                          'productInfo': {
+                            'name': itemName,
+                            'expiredAt': expiredAt,
+                            'foodType': foodType,
+                            'price': itemPrice,
+                            'itemType': _itemType,
+                          },
+                          'photo': await await MultipartFile.fromFile(
+                            _image!.path,
+                            filename: _image!.path,
+                          )
+                        };
+                        String url =
+                            '${dotenv.env["BASE_URL"]}/restaurant/products';
+                        dynamic response = await postReq(url, body);
                       }
                     : null,
               )
