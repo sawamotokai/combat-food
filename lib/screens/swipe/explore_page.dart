@@ -21,10 +21,12 @@ class ExplorePage extends StatefulWidget {
     required this.goToLikes,
     required this.addLikes,
     required this.requestBody,
+    required this.addDisLikes,
   });
 
   final VoidCallback goToLikes;
   final StringCallback addLikes;
+  final StringCallback addDisLikes;
   final Map<String, String> requestBody;
 
   @override
@@ -44,15 +46,21 @@ class _ExplorePageState extends State<ExplorePage> {
   dynamic exploreItems;
 
   void getExploreItems() async {
-    Response repsonse =
-        await postReq('${dotenv.env["BASE_URL"]}/products', widget.requestBody);
+    try {
+      Response response = await postReq(
+          '${dotenv.env["BASE_URL"]}/products', widget.requestBody);
 
-    setState(() {
-      exploreItems = repsonse.body;
-      itemLength = explore_json.length;
-      stackIndex = 0;
-      cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
-    });
+      print(response.body);
+
+      setState(() {
+        exploreItems = response.body;
+        itemLength = explore_json.length;
+        stackIndex = 0;
+        cardStates = List.generate(itemLength, (index) => VisibleState.neutral);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -68,6 +76,15 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget getBody() {
     Size size = MediaQuery.of(context).size;
+
+    List urls = List.generate(exploreItems.length, (index) async {
+      try {
+        return await getImageFromFirestore(exploreItems[index]['imgUrl']);
+      } catch (e) {
+        print(e);
+      }
+    });
+
     return Padding(
       padding: EdgeInsets.only(bottom: 120),
       child: Container(
@@ -79,6 +96,9 @@ class _ExplorePageState extends State<ExplorePage> {
               /// Get orientation & index of swiped card!
               if (orientation == CardSwipeOrientation.RIGHT) {
                 widget.addLikes(exploreItems[index]['productId']);
+              }
+              if (orientation == CardSwipeOrientation.LEFT) {
+                widget.addDisLikes(exploreItems[index]['productId']);
               }
               if (index == itemLength - 1 &&
                   orientation != CardSwipeOrientation.RECOVER) {
@@ -123,7 +143,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       height: size.height,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(exploreItems[index]['imgUrl']),
+                          image: NetworkImage(urls[index]),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -425,6 +445,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 setState(() {
                   cardStates[currentIndex] = VisibleState.dislike;
                 });
+                widget.addDisLikes(exploreItems[currentIndex]['productId']);
               },
               child: BottomIcon(
                 assetName: "assets/images/dislike.svg",

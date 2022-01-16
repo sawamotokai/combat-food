@@ -19,6 +19,7 @@ class SwipeScreen extends StatefulWidget {
 class _SwipeScreenState extends State<SwipeScreen> {
   int pageIndex = 0;
   List<String> likeList = [];
+  List<String> disLikeList = [];
 
   bool inProgress = false;
 
@@ -33,6 +34,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   void initState() {
     super.initState();
     likeList = [];
+    disLikeList = [];
     pageIndex = 0;
   }
 
@@ -54,7 +56,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
               // send likes list
               print('sleep start');
               await postReq('${dotenv.env["BASE_URL"]}/likes', {
-                'likeList': jsonEncode(likeList),
+                'likes': jsonEncode(likeList),
+                'disLikes': jsonEncode(disLikeList),
               });
               print('sleep end');
             }
@@ -90,11 +93,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
           addLikes: (String proudctId) {
             likeList.add(proudctId);
           },
+          addDisLikes: (String productId) {
+            disLikeList.add(productId);
+          },
           requestBody: productsRequestBody,
         ),
-        LikesPage(
-          likes: [0, 1, 2, 3, 4],
-        ),
+        // LikesPage(),
+        Scaffold(),
         Setting(),
       ],
     );
