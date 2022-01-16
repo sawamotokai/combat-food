@@ -23,14 +23,10 @@ class HomeScreen extends StatelessWidget {
             return const Text('error');
           }
           if (snapshot.hasData) {
-
-            // TODO: fetch user and decide which screen to render (dashboard or preference)
-            // return Dashboard();
-            return Dashboard();
+            return SwipeScreen();
           }
-          // return SwipeScreen();
-          return Dashboard();
-          // return const LoginScreen();
+          // return Dashboard();
+          return const LoginScreen();
         });
   }
 }
