@@ -54,7 +54,6 @@ class _NewPostState extends State<NewPost> {
   }
 
   bool validate() {
-    print("$_image $itemName $itemPrice $expiredAt $_itemType $foodType");
     return _image != null &&
         itemName != '' &&
         itemName != null &&
