@@ -7,16 +7,8 @@ class FoodTypeField extends StatelessWidget {
     'Chinese',
     'Italian',
     'Fruit',
-    'Japanese',
-    'Chinese',
-    'Italian',
-    'Fruit',
-    'Japanese',
-    'Chinese',
-    'Italian',
-    'Fruit',
   ];
-  final int size = 12;
+  final int size = 4;
 
   @override
   Widget build(BuildContext context) {
