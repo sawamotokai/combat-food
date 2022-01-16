@@ -2,6 +2,7 @@ import 'package:combat_food/screens/swipe/setting_screen/distance/distance_field
 import 'package:combat_food/screens/swipe/setting_screen/food_type/food_type_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/price/price_field.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Pref extends StatefulWidget {
   const Pref({Key? key}) : super(key: key);
@@ -31,7 +32,10 @@ class _PrefState extends State<Pref> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Combat Food"),
+        title: Text(
+          "Combat Food",
+          style: GoogleFonts.pacifico(),
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -53,16 +57,18 @@ class _PrefState extends State<Pref> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Center(
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DistanceField(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: PriceField(),
-                        ),
-                      ],),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DistanceField(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: PriceField(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
