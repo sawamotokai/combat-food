@@ -12,7 +12,7 @@ class Message extends StatelessWidget {
       padding: const EdgeInsets.only(top: 4, bottom: 0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.brown.shade300,
+          color: Colors.brown.shade100,
         ),
         width: double.infinity,
         // height: 120,

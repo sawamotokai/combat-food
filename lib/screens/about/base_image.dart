@@ -9,7 +9,7 @@ class BaseLayout extends StatelessWidget {
       child: Column(
         children: [
           const Text(
-            '\n\nOur Approach',
+            '\nOur Approach',
             style: TextStyle(color: Colors.white),
             textAlign: TextAlign.center, 
           ),
