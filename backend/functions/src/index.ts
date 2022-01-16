@@ -64,12 +64,25 @@ combatFoodApp.post("/products", async (request:any, response) => {
         }
         const allList = [...validProducts];
         const trimedList:string[] = allList.length>=10?allList.slice(0, 10):allList;
-        const dataList = await Promise.all(trimedList.map((productId:string)=>db.collection("products").doc(productId).get()));
-        console.log(dataList[0].data());
-        const ret = dataList.map((e)=>e.data());
-
+        const productIdList :any= [];
+        let dataList = await Promise.all(trimedList.map((productId:string)=>{
+            productIdList.push(productId);
+            return db.collection("products").doc(productId).get();
+        }));
+        console.log(dataList);
+        dataList = dataList.map((e:any)=>e.data());
+        console.log(dataList);
+        const ret = dataList.map((e:any, ind)=> {
+            e.expiredAt= e.expiredAt.toDate();
+            e.lockedUntil= e.lockedUntil.toDate();
+            e.productId = productIdList[ind];
+            e.imageUrl = `${e.restaurantName}/${productIdList[ind]}/0.png`;
+            console.log(e);
+            return e;
+        } );
+        console.log(ret);
         response.status(200).send({
-            "productsIdList": ret,
+            "products": ret,
         });
     } catch (error) {
         console.log(error);
@@ -90,17 +103,16 @@ combatFoodApp.get("/confirmation/:product_id", async (request:any, response) => 
             return;
         } else if (
             product?.lockedBy != request.user.user_id &&
-            product.lockedUntil > admin.firestore.Timestamp.fromDate(new Date())) {
+            new Date(product.lockedUntil) > new Date()) {
             response.status(200).send("This product is locked by someone.");
             return;
         } else {
             // get lock
-            const nowDate = new Date();
-            nowDate.setSeconds(nowDate.getSeconds()+120);
-            const lockedUntil = admin.firestore.Timestamp.fromDate(nowDate);
+            const lockedUntil = new Date();
+            lockedUntil.setSeconds(lockedUntil.getSeconds()+120);
             await db.collection("products").doc(productId).update({
                 "lockedBy": request.user.user_id,
-                "lockedUntil": lockedUntil,
+                "lockedUntil": String(lockedUntil),
                 "status": ProductStatus.LOCKED,
             });
             response.status(200).send("This product is locked for 2minutes.");
@@ -118,7 +130,6 @@ combatFoodApp.get("/checkout/:product_id", async (request:any, response) => {
         const productId = request.params.product_id;
         const product = (await db.collection("products").doc(productId).get()).data();
         const restaurantId = product?.restaurantId;
-        const restaurantName = (await db.collection("restaurant").doc(restaurantId).get()).data()?.name;
         if (!product) {
             response.status(200).send("empty");
             return;
@@ -133,14 +144,13 @@ combatFoodApp.get("/checkout/:product_id", async (request:any, response) => {
         });
         await db.collection("restaurants").doc(restaurantId).update({
             "history": admin.firestore.FieldValue.arrayUnion({
-                "imageUrl": `gs://combatfoodapi.appspot.com/${restaurantName}/${productId}/0.png`,
+                "imageUrl": `${product.restaurantName}/${productId}/0.png`,
                 "customer_fullname": (await db.collection("users").doc(request.user.user_id).get()).data()?.name,
                 "ordered_at": String(new Date()),
                 "price": product?.price1,
                 ...product,
             }),
         });
-        console.log("AAAAAAAAAAAAA");
         response.status(200).send("Purchased!!");
 
         response.status(200).send();
@@ -204,14 +214,20 @@ combatFoodApp.post("/restaurant/products", fileUploadMiddleware, async (request:
         console.log("RestaurantName: ", restaurantName);
 
         const productInfo:PostedProduct = JSON.parse(request.body.productInfo);
-        productInfo.expiredAt = new Date(productInfo.expiredAt);
-        productInfo.lockedUntil = new Date(0);
+        // productInfo.expiredAt = admin.firestore.Timestamp.fromDate(productInfo.expiredAt);
+        // productInfo.lockedUntil = admin.firestore.Timestamp.fromDate(new Date(0));
         productInfo.status = ProductStatus.AVAILABLE;
         productInfo.restaurantId = restaurantId;
+        productInfo.restaurantName = restaurantName;
         const productId = productInfo.name + Date.now().toString();
+
         await Promise.all([
             uploadImageFiles(admin, request.files, restaurantName, productId),
-            db.collection("products").doc(productId).create({...productInfo}),
+            db.collection("products").doc(productId).create({
+                ...productInfo,
+                "expiredAt": admin.firestore.Timestamp.fromDate(new Date(productInfo.expiredAt)),
+                "lockedUntil": admin.firestore.Timestamp.fromDate(new Date(new Date(0))),
+            }),
             db.collection("restaurants").doc(restaurantId).update({
                 products: admin.firestore.FieldValue.arrayUnion(productId),
             }),

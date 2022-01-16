@@ -46,3 +46,20 @@ Future<List<dynamic>> getOrderHistory() async {
   List<dynamic> orders = data['orders']!;
   return orders;
 }
+
+Future<Map<String, dynamic>> getExploreItems() async {
+  http.Response res = await postReq('${dotenv.env["BASE_URL"]}/products', {});
+  print(res.body);
+  LinkedHashMap<String, dynamic> data = jsonDecode(res.body);
+  List<dynamic> ret = data['products']!;
+  print(ret);
+  List<String> images = [];
+  for (int i = 0; i < ret.length; i++) {
+    images.add(await getImageFromFirestore(ret[i]['imageUrl']));
+  }
+  Map<String, dynamic> ret2 = {
+    'data': ret,
+    'images': images,
+  };
+  return ret2;
+}
