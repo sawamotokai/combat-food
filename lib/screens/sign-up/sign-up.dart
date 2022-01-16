@@ -1,4 +1,6 @@
+import 'package:combat_food/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -76,29 +78,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildName() {
-    return Container(
-      child: Row(
-        children: [
-          _buildFirstName(),
-          _buildLastName(),
-        ],
-      ),
-    );
-  }
-
   Widget _buildPassword() {
     return TextFormField(
       decoration: const InputDecoration(labelText: 'Password'),
-      keyboardType: TextInputType.visiblePassword,
+      obscureText: true,
       validator: (String? value) {
         if (value == null) return null;
         if (value.isEmpty) {
           return 'Password is Required';
         }
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters';
+        }
         return null;
       },
-      onSaved: (String? value) {
+      onChanged: (String? value) {
         if (value != null) _password = value;
       },
     );
@@ -107,15 +101,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildConfirmationPassword() {
     return TextFormField(
       decoration: const InputDecoration(labelText: 'Password'),
-      keyboardType: TextInputType.visiblePassword,
+      obscureText: true,
       validator: (String? value) {
         if (value == null) return null;
+        print(value);
+        print(_password);
         if (value != _password) {
           return 'Password does not match.';
         }
         return null;
       },
-      onSaved: (String? value) {
+      onChanged: (String? value) {
         if (value != null) _confirmationPassword = value;
       },
     );
@@ -126,6 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign Up'),
+        backgroundColor: Colors.green[700],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -141,14 +138,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _buildPassword(),
                   _buildConfirmationPassword(),
                   const SizedBox(height: 100),
-                  ElevatedButton(
+                  ElevatedButton.icon(
+                    icon: const Icon(FontAwesomeIcons.arrowAltCircleUp),
+                    label: const Text('Sign Up'),
                     onPressed: () {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
                       _formKey.currentState!.save();
+                      AuthService().emailPasswordSignUp(_email, _password);
                     },
-                    child: const Text('Sign Up'),
                   ),
                 ],
               ),

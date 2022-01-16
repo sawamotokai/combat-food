@@ -14,8 +14,11 @@ class AuthService {
 
   Future<void> emailPasswordSignUp(String email, String password) async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // TODO: API call to create a user document with information
     } on FirebaseAuthException catch (e) {
       print(e);
     }
