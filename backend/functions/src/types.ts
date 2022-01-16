@@ -1,4 +1,4 @@
-interface PostedFiles{
+export interface PostedFiles{
     fieldname: string,
     originalname: string,
     encoding: string,
@@ -7,7 +7,8 @@ interface PostedFiles{
     size: number
 }
 
-enum ProductStatus{
+
+export enum ProductStatus{
     "AVAILABLE",
     "LOCKED",
     "PURCHASED",
@@ -15,8 +16,12 @@ enum ProductStatus{
     "DELETED"
 }
 
-interface PostedProduct{
+
+export interface PostedProduct{
     name: string,
+    restaurantId:string,
+    price:number,
+    foodType:string,
     expiredAt: Date,
     lockedUntil: Date,
     lockedBy:string,
@@ -24,7 +29,7 @@ interface PostedProduct{
 }
 
 
-interface LikesDislikes{
+export interface LikesDislikes{
     likes:string[],
     disLikes:string[]
 }

@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:combat_food/services/dio_api.dart';
+import 'package:combat_food/shared/food_type_enum.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
@@ -10,20 +14,7 @@ import 'package:select_form_field/select_form_field.dart';
 
 enum ItemType { ingredient, dish }
 
-final List<Map<String, dynamic>> _items = [
-  {
-    'value': 'jp',
-    'label': 'Japanese',
-  },
-  {
-    'value': 'italy',
-    'label': 'Italian',
-  },
-  {
-    'value': 'france',
-    'label': 'France',
-  },
-];
+final List<Map<String, dynamic>> _items = FoodTypesMap;
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
@@ -44,7 +35,7 @@ class _NewPostState extends State<NewPost> {
   String itemPrice = '0.00';
   DateTime? expiredAt;
   ItemType _itemType = ItemType.ingredient;
-  String? foodType;
+  String foodType = _items[0]['value'];
 
   final picker = ImagePicker();
 
@@ -64,8 +55,9 @@ class _NewPostState extends State<NewPost> {
 
   bool validate() {
     return _image != null &&
+        itemName != '' &&
         itemName != null &&
-        itemPrice != null &&
+        itemPrice != '' &&
         expiredAt != null &&
         foodType != null;
   }
@@ -73,6 +65,7 @@ class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
     bool isValid = validate();
+    print(isValid);
 
     return Scaffold(
       appBar: AppBar(
@@ -229,7 +222,7 @@ class _NewPostState extends State<NewPost> {
                     ),
                     SelectFormField(
                       type: SelectFormFieldType.dropdown, // or can be dialog
-                      initialValue: 'jp',
+                      initialValue: foodType,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.format_shapes,
@@ -290,8 +283,25 @@ class _NewPostState extends State<NewPost> {
                   ),
                 ),
                 onTap: isValid
-                    ? () {
+                    ? () async {
                         print('new post');
+                        dynamic body = {
+                          'productInfo': {
+                            'name': itemName,
+                            'expiredAt': expiredAt,
+                            'foodType': foodType,
+                            'price': itemPrice,
+                            'itemType': _itemType,
+                          },
+                          'photo': await await MultipartFile.fromFile(
+                            _image!.path,
+                            filename: _image!.path,
+                          )
+                        };
+                        String url =
+                            '${dotenv.env["BASE_URL"]}/restaurant/products';
+                        dynamic response = await postReq(url, body);
+                        print(response);
                       }
                     : null,
               )
@@ -354,8 +364,11 @@ class BasicDateTimeField extends StatelessWidget {
                   initialTime:
                       TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                 );
-                return DateTimeField.combine(date, time);
+                DateTime result = DateTimeField.combine(date, time);
+                setState(result);
+                return result;
               } else {
+                setState(currentValue!);
                 return currentValue;
               }
             },
