@@ -1,9 +1,8 @@
+import 'package:combat_food/screens/swipe/setting_screen/apply/apply_button_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/food_type/food_type_field.dart';
 import 'package:combat_food/screens/swipe/setting_screen/price/price_field.dart';
 import 'package:flutter/material.dart';
-
 import 'distance/distance_field.dart';
-import 'food_type/food_type_check_list.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -20,31 +19,18 @@ class _SettingScreen extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    return Container(
-      // ignore: prefer_const_constructors
-      height: size.height * 0.8,
-
-      child: SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-            Container(
-              // flex: 1,
-              child: PriceField(),
-            ),
-            Container(
-              // flex: 1,
-              child: DistanceField(),
-            ),
-            Container(
-              // flex: 1,
-              child: FoodTypeField(),
-            ),
-          ]),
-        ),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 120),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // shrinkWrap: true,
+          children: [
+          PriceField(),
+          DistanceField(),
+          FoodTypeField(),
+          ApplyButtonField()
+        ]),
       ),
     );
   }

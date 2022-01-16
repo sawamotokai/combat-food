@@ -15,7 +15,7 @@ class FoodTypeCkeckList extends StatelessWidget {
     return Column(children: [
       Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 15, left: 40, right: 40),
+        margin: const EdgeInsets.only(top: 15, left: 40, right: 40, bottom: 10),
         decoration: BoxDecoration(
           color: Colors.orange[200],
           borderRadius: BorderRadius.circular(15),
