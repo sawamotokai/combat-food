@@ -3,13 +3,14 @@ import * as express from "express";
 import * as admin from "firebase-admin";
 import {validateFirebaseIdToken} from "./auth";
 import * as fileUploadMiddleware from "busboy-firebase";
-import {uploadImageFiles, registerProducts} from "./utils";
+import {getValidLikes, uploadImageFiles} from "./utils";
 
 
 admin.initializeApp();
 const db = admin.firestore();
 const combatFoodApp = express();
 combatFoodApp.use(validateFirebaseIdToken);
+
 
 combatFoodApp.post("/user/signup", async (request:any, response) => {
     try {
@@ -74,18 +75,17 @@ combatFoodApp.post("/likes", async (request:any, response) => {
         const likesDislikes:LikesDislikes = request.body;
         console.log(likesDislikes);
         const snapshot = await db.collection("users").doc(userId).get();
-        const likes = new Set(snapshot.data()?.likes);
-        const disLikes = new Set(snapshot.data()?.dislikes);
-
-        likesDislikes.likes.forEach((item)=>likes.add(item));
+        const allLikes:Set<string> = new Set(snapshot.data()?.likes);
+        const disLikes:Set<string> = new Set(snapshot.data()?.dislikes);
+        likesDislikes.likes.forEach((item)=>allLikes.add(item));
         likesDislikes.disLikes.forEach((item)=>disLikes.add(item));
-
         await db.collection("users").doc(userId).update({
-            "likes": [...likes],
+            "likes": [...allLikes],
             "dislikes": [...disLikes],
         });
-
-        response.status(200).send();
+        const likes = await getValidLikes(admin, db, [...allLikes]);
+        console.log(likes);
+        response.status(200).send({"likes": likes});
     } catch (error) {
         console.log(error);
         response.status(500).send(error);
@@ -99,13 +99,7 @@ combatFoodApp.get("/likes", async (request:any, response) => {
     try {
         const userId = request.user.user_id;
         const allLikes = (await db.collection("users").doc(userId).get()).data()?.likes;
-        const likes:string[]=[];
-
-        await Promise.all(allLikes.map(async (productId:string)=>{
-            const expTimeStamp = (await db.collection("products").doc(productId).get()).data()?.expiredAt;
-            if (!expTimeStamp) return;
-            if (expTimeStamp>admin.firestore.Timestamp.fromDate(new Date())) likes.push(productId);
-        }));
+        const likes = await getValidLikes(admin, db, allLikes);
         console.log(likes);
         response.status(200).send({"likes": likes});
     } catch (error) {
@@ -128,10 +122,29 @@ combatFoodApp.post("/restaurant/products", fileUploadMiddleware, async (request:
         productInfo.lockedUntil = new Date(productInfo.lockedUntil);
 
         const productId = productInfo.name + Date.now().toString();
-        await Promise.all(uploadImageFiles(admin, request.files, restaurantName, productId));
-        const resRegister = await registerProducts(db, productInfo, productId);
 
-        response.status(200).send(resRegister);
+        const results = await Promise.all([
+            uploadImageFiles(admin, request.files, restaurantName, productId),
+            db.collection("products").doc(productId).create({...productInfo}),
+            db.collection("restaurants").doc(restaurantId).update({
+                products: admin.firestore.FieldValue.arrayUnion(productId),
+            }),
+        ]);
+        console.log(results);
+        response.status(200).send(results);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send("Failed");
+    }
+});
+
+
+combatFoodApp.get("/restaurant/products", async (request:any, response:any)=>{
+    try {
+        const restaurantId = request.user.user_id;
+        const products = (await db.collection("restaurants").doc(restaurantId).get()).data()?.products;
+        console.log(products);
+        response.status(200).send({"products": products});
     } catch (error) {
         console.log(error);
         response.status(500).send("Failed");

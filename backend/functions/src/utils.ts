@@ -13,7 +13,12 @@ export const uploadImageFiles = (admin:any, files:PostedFiles[], restaurantName:
 };
 
 
-export const registerProducts = (db:FirebaseFirestore.Firestore, productInfo:PostedProduct, productId:string)=>{
-    return db.collection("products").doc(productId).create({...productInfo});
-    // return db.collection("products").doc(productId).update({...productInfo});
+export const getValidLikes = async (admin:any, db:any, allLikes:Array<string>)=>{
+    const likes:string[]=[];
+    await Promise.all(allLikes.map(async (productId:string)=>{
+        const expTimeStamp = (await db.collection("products").doc(productId).get()).data()?.expiredAt;
+        if (!expTimeStamp) return;
+        if (expTimeStamp>admin.firestore.Timestamp.fromDate(new Date())) likes.push(productId);
+    }));
+    return likes;
 };
