@@ -1,4 +1,6 @@
+import 'package:combat_food/screens/preference/pref.dart';
 import 'package:combat_food/screens/sign-up/customer-sign-up.dart';
+import 'package:combat_food/screens/swipe/setting_screen/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:combat_food/services/auth.dart';
 import 'package:combat_food/screens/swipe/swipe.dart';
@@ -21,9 +23,12 @@ class HomeScreen extends StatelessWidget {
             return const Text('error');
           }
           if (snapshot.hasData) {
+
+            // TODO: fetch user and decide which screen to render (dashboard or preference)
             // return Dashboard();
             return Dashboard();
           }
+          // return SwipeScreen();
           return Dashboard();
           // return const LoginScreen();
         });
