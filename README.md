@@ -1,8 +1,12 @@
 # Combat Food
 
+<p align="center">
+  <img src="assets/images/combatFoodPic.png" height="500px">
+</p>
+
 ## Firebase Setup
 
-#concept
+# concept
 Our goal is to minimize expiring food waste from restaurant. To achieve the goal, we designed a mobile application that allows individuals to select and purchase an item from a number of other items; while restaurants can post their left-over or other items with their preferred price. 
 
 Since we are aiming to build accessible and convenient applicatin, we have decided to create a mobile application using flutter, dart and firebase. 
